@@ -21,3 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Weather App"
 include ':app'
+include ':backend'
+include ':backend:weather-api'
