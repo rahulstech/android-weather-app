@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Weather App</string>
+    <string name="text_uv">UV Index</string>
+    <string name="text_precipitation">Precipitation</string>
+    <string name="text_wind">Wind</string>
+    <string name="text_humidity">Humidity</string>
+    <string name="text_sunrise">Sunrise</string>
+    <string name="text_sunset">Sunset</string>
+    <string name="text_other_temp_c">%.2f°C / %.2f°C feels like %.2f°C</string>
+    <string name="text_uv_low">Low</string>
+    <string name="text_uv_moderate">Moderate</string>
+    <string name="text_uv_high">High</string>
+    <string name="text_uv_very_high">Very High</string>
+    <string name="text_uv_extream">Extream</string>
 </resources>

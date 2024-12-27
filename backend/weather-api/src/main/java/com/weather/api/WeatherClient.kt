@@ -1,49 +1,54 @@
 package com.weather.api
 
-import android.util.Log
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class WeatherClient(apiKey: String) {
+class WeatherClient private constructor() {
 
     private val TAG = WeatherClient::class.java.simpleName
 
-    private val retrofit: Retrofit
+    private val BASE_URL = "https://api.weatherapi.com/v1/"
 
-    private var weatherService: WeatherService? = null
+    companion object {
 
-    init {
+        private lateinit var key: String
 
-        val interceptor = Interceptor {
-            val requestBuilder = it.request().newBuilder()
-            val urlBuilder = it.request().url().newBuilder();
-            val url = urlBuilder.addQueryParameter("key",apiKey).build()
-            val request = requestBuilder.url(url).build()
+        private val instance: WeatherClient by lazy(this) { WeatherClient() }
 
-            Log.d(TAG, "url= $url")
+        fun getInstance(key: String): WeatherClient {
+            this.key = key
+            return instance
+        }
+    }
 
-            it.proceed(request)
+    private val retrofit: Retrofit by lazy {
+
+        val client = getOkHttpClient()
+
+        val builder = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
+
+        builder.build()
+    }
+
+    private fun getOkHttpClient(): OkHttpClient {
+        val apikeyInterceptor = Interceptor {
+            val ogreq = it.request()
+            val ogurl = ogreq.url()
+            val url = ogurl.newBuilder().addQueryParameter("key",key).build()
+            val req = ogreq.newBuilder().url(url).build()
+            it.proceed(req)
         }
 
-        val httpClientBuilder = OkHttpClient.Builder()
-
-        httpClientBuilder.interceptors().add(interceptor)
-
-        val httpClient = httpClientBuilder.build()
-
-        retrofit = Retrofit.Builder()
-            .baseUrl("https://api.weatherapi.com/v1/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(httpClient)
+        return OkHttpClient.Builder()
+            .addInterceptor(apikeyInterceptor)
             .build()
     }
 
-    fun getWeatherService(): WeatherService? {
-        if (null == weatherService) {
-            weatherService = retrofit.create(WeatherService::class.java)
-        }
-        return weatherService
-    }
+
+    val api: WeatherApi by lazy { retrofit.create(WeatherApi::class.java) }
 }
