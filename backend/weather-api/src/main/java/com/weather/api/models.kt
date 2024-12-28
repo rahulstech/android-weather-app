@@ -4,7 +4,7 @@ data class Location(
     val id: String,
     val name: String, val region: String, val country: String,
     val lat: Double, val lon: Double,
-    val tz_id: String, val localtime: String
+    val tz_id: String?, val localtime: String
 )
 
 data class Timezone(val location: Location)

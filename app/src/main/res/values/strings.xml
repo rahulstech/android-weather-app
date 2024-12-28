@@ -12,4 +12,16 @@
     <string name="text_uv_high">High</string>
     <string name="text_uv_very_high">Very High</string>
     <string name="text_uv_extream">Extream</string>
+    <string name="text_sunny">Sunny</string>
+    <string name="text_clear">Clear</string>
+    <string name="text_fog">Fog</string>
+    <string name="text_mist">Mist</string>
+    <string name="text_cloudy">Cloudy</string>
+    <string name="text_rainy">Rain</string>
+    <string name="text_thunder">Thunder</string>
+    <string name="text_snowfall">Snowfall</string>
+    <string name="text_sleet">Sleet</string>
+    <string name="text_blizzard">Blizzard</string>
+    <string name="text_search_city">Search city</string>
+    <string name="text_load_more_cities">Load more cities...</string>
 </resources>

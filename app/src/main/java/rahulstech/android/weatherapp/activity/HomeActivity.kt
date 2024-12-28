@@ -1,12 +1,21 @@
 package rahulstech.android.weatherapp.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import rahulstech.android.weatherapp.R
+import rahulstech.android.weatherapp.adapter.HourlyForecastAdapter
+import rahulstech.android.weatherapp.getTemperatureCelsiusText
+import rahulstech.android.weatherapp.getWeatherConditionIcon
+import rahulstech.android.weatherapp.getWeatherConditionText
 import rahulstech.android.weatherapp.viewmodel.HomeViewModel
 import rahulstech.weather.repository.WeatherCondition
 import rahulstech.weather.repository.WeatherForecast
@@ -29,8 +38,6 @@ class HomeActivity : AppCompatActivity() {
 
     private lateinit var labelTemperature: TextView
 
-    private lateinit var labelTempUnit: TextView
-
     private lateinit var iconWeatherCondition: ImageView
 
     private lateinit var uvIndex: TextView
@@ -49,13 +56,16 @@ class HomeActivity : AppCompatActivity() {
 
     private lateinit var dateTime: TextView
 
+    private lateinit var forecastHourly: RecyclerView
+
+    private lateinit var hourlyForecastAdapter: HourlyForecastAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
         labelCity = findViewById(R.id.label_city)
         labelTemperature =  findViewById(R.id.label_temperature)
-        labelTempUnit = findViewById(R.id.label_temp_unit)
         iconWeatherCondition = findViewById(R.id.icon_weather_condition)
         uvIndex = findViewById(R.id.uv_index)
         precipitation = findViewById(R.id.precipitation)
@@ -65,12 +75,18 @@ class HomeActivity : AppCompatActivity() {
         weatherCondition = findViewById(R.id.weather_condition)
         otherTemp = findViewById(R.id.other_temp)
         dateTime = findViewById(R.id.dateTime)
+        forecastHourly = findViewById(R.id.forecast_hourly)
 
-        viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        hourlyForecastAdapter = HourlyForecastAdapter(this)
+
+        forecastHourly.layoutManager = layoutManager
+        forecastHourly.adapter = hourlyForecastAdapter
+
 
         // Delhi: 1112321
         // Kandi: 1118644
-
+        viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         viewModel.weatherToday.observe(this) { onCurrentWeatherReportFetched(it) }
         viewModel.setLocationId("1112321")
     }
@@ -78,6 +94,7 @@ class HomeActivity : AppCompatActivity() {
     private fun onCurrentWeatherReportFetched(report: WeatherForecast?) {
 
         if (null == report) {
+            hourlyForecastAdapter.submitList(null)
             return
         }
 
@@ -94,30 +111,24 @@ class HomeActivity : AppCompatActivity() {
         sunset.text = day.sunset.format(WEATHER_TIME_FORMATTER)
         otherTemp.text = resources.getString(R.string.text_other_temp_c, day.maxTemp, day.minTemp, current?.feelsLike)
 
+        hourlyForecastAdapter.submitList(hours)
+
         current?.let {
-            labelTemperature.text = String.format(Locale.ENGLISH, "%.2f", it.temp)
-            labelTempUnit.text = "°C"
+            updateCurrentTemperature(it.temp)
             uvIndex.text = getUvLabel(it.uv)
             precipitation.text = String.format(Locale.ENGLISH, "%.2f%%", it.precipitation * 100)
             humidity.text = String.format(Locale.ENGLISH, "%.2f%%", it.humidity)
-
             updateWeatherCondition(current.condition, current.isDay)
         }
     }
 
+    private fun updateCurrentTemperature(tempC: Float) {
+        labelTemperature.text = getTemperatureCelsiusText(tempC)
+    }
+
     private fun updateWeatherCondition(wc: WeatherCondition, isDay: Boolean) {
-        weatherCondition.text = wc.name
-        iconWeatherCondition.setImageResource(when (wc) {
-            WeatherCondition.Fine -> if (isDay) R.drawable.sun else R.drawable.moon
-            WeatherCondition.Fog -> R.drawable.fog
-            WeatherCondition.Mist -> R.drawable.mist
-            WeatherCondition.Cloudy -> R.drawable.cloud
-            WeatherCondition.Rainy -> R.drawable.rain
-            WeatherCondition.Thunder -> R.drawable.thunder
-            WeatherCondition.Snow -> R.drawable.snowfall
-            WeatherCondition.Sleet -> R.drawable.sleet
-            WeatherCondition.Blizzard -> R.drawable.blizzard
-        })
+        weatherCondition.text = getWeatherConditionText(this, wc, isDay)
+        iconWeatherCondition.setImageDrawable(getWeatherConditionIcon(this, wc, isDay))
     }
 
     private fun getUvLabel(uv: Float): String = resources.getString( when {
@@ -130,5 +141,24 @@ class HomeActivity : AppCompatActivity() {
 
     private fun onRequestFail(resCode: Int, body: String?) {
         Log.e(TAG, "request failed with res-code=$resCode err-body: $body")
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.activity_home_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.search_city -> {
+                handleSearchCity()
+                return true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun handleSearchCity() {
+        startActivity(Intent(this, CitySearchActivity::class.java))
     }
 }

@@ -3,6 +3,7 @@ package rahulstech.weather.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.weather.api.Location
 import com.weather.api.WeatherClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -53,8 +54,7 @@ class WeatherRepository(private val apiKey: String) {
                 val day = forecast.day
                 val astronomy = forecast.astro
 
-                val city = City(0, locationId, location.name, location.region, location.country,
-                            location.lat, location.lon, ZoneId.of(location.tz_id))
+                val city = convertLocationToCity(locationId, location)
 
                 val date = LocalDate.now()
 
@@ -88,5 +88,52 @@ class WeatherRepository(private val apiKey: String) {
          }
 
         return result
+    }
+
+    fun searchCity(keyword: String?): LiveData<List<City>> {
+        val result = MutableLiveData<List<City>>(emptyList())
+        if (keyword.isNullOrBlank()) {
+            return result
+        }
+
+        val mainFlow: Flow<List<City>> = flow {
+            val res = api.searchCity(keyword)
+            if (res.isSuccessful) {
+                emit(res.body())
+            }
+            else {
+                Log.i(TAG, "city search request error ${res.errorBody()}")
+                emit(emptyList())
+            }
+        }
+            .transform {
+                if (it.isNullOrEmpty()) {
+                    emit(emptyList())
+                }
+                else {
+                    val cities = mutableListOf<City>()
+                    for (location in it) {
+                        val city = convertLocationToCity(location.id, location)
+                        cities.add(city)
+                    }
+                    emit(cities)
+                }
+            }
+            .flowOn(Dispatchers.IO)
+            .catch { Log.e(TAG, null, it) }
+
+        GlobalScope.launch {
+            mainFlow.collect { result.postValue(it) }
+        }
+
+        return result
+    }
+
+    private fun convertLocationToCity(locationId: String, location: Location): City {
+        val zoneId = if (location.tz_id.isNullOrBlank()) ZoneId.systemDefault() else ZoneId.of(location.tz_id)
+        return City(
+            0, locationId, location.name, location.region, location.country,
+            location.lat, location.lon, zoneId
+        )
     }
 }

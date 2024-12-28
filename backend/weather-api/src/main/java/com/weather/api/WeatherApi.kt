@@ -25,7 +25,7 @@ interface WeatherApi {
     ): Response<Timezone>
 
     @GET("search.json")
-    fun searchCity(
+    suspend fun searchCity(
         @Query("q") q: String
-    ): List<Location>
+    ): Response<List<Location>>
 }
