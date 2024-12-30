@@ -3,6 +3,7 @@ package rahulstech.weather.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import com.weather.api.Location
 import com.weather.api.WeatherClient
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +31,6 @@ class WeatherRepository(private val apiKey: String) {
     private val api by lazy { WeatherClient.getInstance(apiKey).api }
 
     fun getWeatherToday(locationId: String): LiveData<WeatherForecast?> {
-        val result = MutableLiveData<WeatherForecast?>()
         val mainFlow: Flow<WeatherForecast?> = flow {
             val response = api.getForecast("id:$locationId", 1)
             if (response.isSuccessful) {
@@ -81,13 +81,7 @@ class WeatherRepository(private val apiKey: String) {
                 Log.e(TAG, null,it)
             }
 
-         GlobalScope.launch {
-             mainFlow.collect {
-                 result.postValue(it)
-             }
-         }
-
-        return result
+        return mainFlow.asLiveData()
     }
 
     fun searchCity(keyword: String?): LiveData<List<City>> {
@@ -130,7 +124,7 @@ class WeatherRepository(private val apiKey: String) {
     }
 
     private fun convertLocationToCity(locationId: String, location: Location): City {
-        val zoneId = if (location.tz_id.isNullOrBlank()) ZoneId.systemDefault() else ZoneId.of(location.tz_id)
+        val zoneId = if (location.tz_id.isNullOrBlank()) null else ZoneId.of(location.tz_id)
         return City(
             0, locationId, location.name, location.region, location.country,
             location.lat, location.lon, zoneId

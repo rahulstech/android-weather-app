@@ -13,11 +13,11 @@ class CitySearchViewModel(app: Application) : AndroidViewModel(app) {
 
     private val repo by lazy { WeatherRepository(BuildConfig.WEATHER_API_KEY) }
 
-    private val keywordLiveData = MutableLiveData<String>()
+    private val keywordLiveData = MutableLiveData<String?>()
 
     val citySearchResult: LiveData<List<City>> by lazy { keywordLiveData.switchMap { repo.searchCity(it) } }
 
-    fun changeKeyword(keyword: String)  {
+    fun changeKeyword(keyword: String?)  {
         keywordLiveData.value = keyword
     }
 }

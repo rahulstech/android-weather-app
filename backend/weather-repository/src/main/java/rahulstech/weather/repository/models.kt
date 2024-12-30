@@ -10,7 +10,7 @@ data class City(
     val id: Long, val locationId: String,
     val name: String, val region: String, val country: String,
     val lat: Double, val lon: Double,
-    val timezone: ZoneId
+    val timezone: ZoneId?
 )
 
 data class HourlyWeather(val city: City, val datetime: LocalDateTime, val isDay: Boolean,

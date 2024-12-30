@@ -24,4 +24,5 @@
     <string name="text_blizzard">Blizzard</string>
     <string name="text_search_city">Search city</string>
     <string name="text_load_more_cities">Load more cities...</string>
+    <string name="message_current_location_changed">location changed to %s</string>
 </resources>

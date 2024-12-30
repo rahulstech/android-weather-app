@@ -16,6 +16,7 @@ import rahulstech.android.weatherapp.adapter.HourlyForecastAdapter
 import rahulstech.android.weatherapp.getTemperatureCelsiusText
 import rahulstech.android.weatherapp.getWeatherConditionIcon
 import rahulstech.android.weatherapp.getWeatherConditionText
+import rahulstech.android.weatherapp.setting.SettingsStorage
 import rahulstech.android.weatherapp.viewmodel.HomeViewModel
 import rahulstech.weather.repository.WeatherCondition
 import rahulstech.weather.repository.WeatherForecast
@@ -83,12 +84,15 @@ class HomeActivity : AppCompatActivity() {
         forecastHourly.layoutManager = layoutManager
         forecastHourly.adapter = hourlyForecastAdapter
 
-
-        // Delhi: 1112321
-        // Kandi: 1118644
         viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         viewModel.weatherToday.observe(this) { onCurrentWeatherReportFetched(it) }
-        viewModel.setLocationId("1112321")
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        val weatherLocationId = SettingsStorage.get(this).getWeatherLocationId()
+        viewModel.setLocationId(weatherLocationId)
     }
 
     private fun onCurrentWeatherReportFetched(report: WeatherForecast?) {
