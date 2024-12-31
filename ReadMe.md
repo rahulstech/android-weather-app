@@ -1,6 +1,14 @@
 ## Android Weather App
 
+This is a simple android weather application that fetches weather data from [WeatherApi](https://weatherapi.com). It provides current hour data, hourly weather forecast, seven days weather forecast and city search. Selected city from city search result is saved in a shared preference
+to use the location as default weather location. By default city **London, UK** is selected.
+
 ### Features
+
+1. current weather report
+2. hourly weather forecast
+3. find and set weather location
+4. 7 days weather forecast
 
 ### Learning Outcome
 
@@ -43,8 +51,17 @@ Like for this project gson converter is used so all the request body will be ser
 path will be considered relative the domain part. So don't prepend `/` in service method url paths. For example: if `@GET("/current.json")` then requests to https://api.weatherapi.com/current.json not to https://api.weatherapi.com/v1/current.json .
 - **OkHttpClient Interceptor:** In cases when I need to something for each request, then we can use OkHttpClient `Interceptor` interface to manipulate each request before sending. For example: this is project we need to append a `key` query which
 contains the api key value. I added an Interceptor that appends `key` query parameter to each request. 
+- **Get ViewModel:** using `ViewModelProvider.get(Class)` I can get and existing view model instance or create if not exists
+- **RecyclerView item click:** to handle recyclerview item click i have used `RecyclerView.OnItemTouchListener` and `GestureDetector`. GestureDetector requires a `OnGestureListener`. This gesture listener provides different methods to handle different
+click events like single click, long click etc. finally an instance of OnItemTouchListener to be added to RecyclerView with `addOnItemTouchListener`
 
 ### Change Log
+- **v2.0**
+ 4 features implemented
+  1. city search and change current weather location
+  2. detailed weather report for current hour
+  3. hourly weather forecast for current date
+  4. 7 days weather forecast for the current weather location
 
 - **v1.0**
  simple api call and display the current weather report for city **London** on success or log error body if request fails. 
