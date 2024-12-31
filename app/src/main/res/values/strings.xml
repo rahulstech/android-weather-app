@@ -6,7 +6,7 @@
     <string name="text_humidity">Humidity</string>
     <string name="text_sunrise">Sunrise</string>
     <string name="text_sunset">Sunset</string>
-    <string name="text_other_temp_c">%.2f°C / %.2f°C feels like %.2f°C</string>
+    <string name="text_other_temp_c">%.2f°c / %.2f°c feels like %.2f°c</string>
     <string name="text_uv_low">Low</string>
     <string name="text_uv_moderate">Moderate</string>
     <string name="text_uv_high">High</string>
@@ -25,4 +25,7 @@
     <string name="text_search_city">Search city</string>
     <string name="text_load_more_cities">Load more cities...</string>
     <string name="message_current_location_changed">location changed to %s</string>
+    <string name="text_weather_forecast">Weather Forecast</string>
+    <string name="text_forecast_temp_c">%.2f°c/%.2f°c</string>
+    <string name="text_forecast_precipitation">%.2f%%</string>
 </resources>

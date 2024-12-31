@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.map
 import com.weather.api.Location
 import com.weather.api.WeatherClient
 import kotlinx.coroutines.Dispatchers
@@ -24,15 +25,18 @@ class WeatherRepository(private val apiKey: String) {
 
     private val TAG = WeatherRepository::class.java.simpleName
 
+    private val FORMATER_DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
     private val FORMATER_TIME = DateTimeFormatter.ofPattern("hh:mm a")
 
     private val FORMATER_DATE_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
 
     private val api by lazy { WeatherClient.getInstance(apiKey).api }
 
-    fun getWeatherToday(locationId: String): LiveData<WeatherForecast?> {
-        val mainFlow: Flow<WeatherForecast?> = flow {
-            val response = api.getForecast("id:$locationId", 1)
+
+    fun getWeatherForecast(locationId: String, days: Int): LiveData<List<WeatherForecast>?> {
+        val mainFlow: Flow<List<WeatherForecast>?> = flow {
+            val response = api.getForecast("id:$locationId", days)
             if (response.isSuccessful) {
                 emit(response.body())
             }
@@ -49,31 +53,37 @@ class WeatherRepository(private val apiKey: String) {
                 }
 
                 val location = it.location
-                val forecast = it.forecast.forecastday[0]
-                val hours = forecast.hour
-                val day = forecast.day
-                val astronomy = forecast.astro
-
                 val city = convertLocationToCity(locationId, location)
+                val forecastDays = it.forecast.forecastday
+                val forecast = mutableListOf<WeatherForecast>()
 
-                val date = LocalDate.now()
+                Log.i(TAG, "no of forecastDays ${forecastDays.size}")
 
-                val dailyWeather = DailyWeather(city, date,
+                forecastDays.forEach {
+                    val hours = it.hour
+                    val day = it.day
+                    val astronomy = it.astro
+
+                    val date = LocalDate.parse(it.date)
+
+                    val dailyWeather = DailyWeather(city, date, WeatherCondition.get(day.condition.code),
                         day.maxtemp_c,day.mintemp_c,day.avgtmp_c,
                         day.totalprecip_mm, day.avghumidity,day.uv,
                         LocalTime.parse(astronomy.sunrise,FORMATER_TIME), LocalTime.parse(astronomy.sunset,FORMATER_TIME))
 
-                val hourlyWeathers = mutableListOf<HourlyWeather>()
-                for (data in hours) {
-                    val hourlyWeather = HourlyWeather(city, LocalDateTime.parse(data.time, FORMATER_DATE_TIME), 1 == data.is_day,
-                        WeatherCondition.get(data.condition.code),
-                        data.temp_c, data.feelslike_c, data.precip_mm, data.humidity, data.uv)
-                    hourlyWeathers.add(hourlyWeather)
+                    val hourlyWeathers = mutableListOf<HourlyWeather>()
+                    hours.forEach { data ->
+                        val hourlyWeather = HourlyWeather(city, LocalDateTime.parse(data.time, FORMATER_DATE_TIME), 1 == data.is_day,
+                            WeatherCondition.get(data.condition.code),
+                            data.temp_c, data.feelslike_c, data.precip_mm, data.humidity, data.uv)
+                        hourlyWeathers.add(hourlyWeather)
+                    }
+
+                    val weatherForecast = WeatherForecast(city,dailyWeather,hourlyWeathers)
+                    forecast.add(weatherForecast)
                 }
 
-                val weatherForecast = WeatherForecast(city,dailyWeather,hourlyWeathers)
-
-                emit(weatherForecast)
+                emit(forecast)
             }
             .flowOn(Dispatchers.IO)
             .catch {
@@ -83,6 +93,16 @@ class WeatherRepository(private val apiKey: String) {
 
         return mainFlow.asLiveData()
     }
+
+    fun getWeatherToday(locationId: String): LiveData<WeatherForecast?> =
+        getWeatherForecast(locationId, 1).map {
+            if (it.isNullOrEmpty()) {
+                null
+            }
+            else {
+                it[0]
+            }
+        }
 
     fun searchCity(keyword: String?): LiveData<List<City>> {
         val result = MutableLiveData<List<City>>(emptyList())

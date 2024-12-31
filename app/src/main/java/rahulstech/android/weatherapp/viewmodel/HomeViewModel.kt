@@ -19,6 +19,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         repository.getWeatherToday(it)
     }
 
+    val sevenDaysWeatherForecast: LiveData<List<WeatherForecast>?> = locationIdLiveData.switchMap {
+        repository.getWeatherForecast(it, 7)
+    }
+
     fun setLocationId(locationId: String) {
         locationIdLiveData.value = locationId
     }

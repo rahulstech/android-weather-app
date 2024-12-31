@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -59,6 +60,8 @@ class HomeActivity : AppCompatActivity() {
 
     private lateinit var forecastHourly: RecyclerView
 
+    private lateinit var btnWeatherForecast: Button
+
     private lateinit var hourlyForecastAdapter: HourlyForecastAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,6 +80,8 @@ class HomeActivity : AppCompatActivity() {
         otherTemp = findViewById(R.id.other_temp)
         dateTime = findViewById(R.id.dateTime)
         forecastHourly = findViewById(R.id.forecast_hourly)
+        btnWeatherForecast = findViewById(R.id.btn_weather_forecast)
+        btnWeatherForecast.setOnClickListener { handleWeatherForecastButton() }
 
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         hourlyForecastAdapter = HourlyForecastAdapter(this)
@@ -86,6 +91,10 @@ class HomeActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         viewModel.weatherToday.observe(this) { onCurrentWeatherReportFetched(it) }
+    }
+
+    private fun handleWeatherForecastButton() {
+        startActivity(Intent(this, WeatherForecastActivity::class.java))
     }
 
     override fun onStart() {
