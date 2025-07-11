@@ -11,6 +11,7 @@ class Converters {
 
     companion object {
         private val FORMAT_DATETIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        private val FORMAT_TIME = DateTimeFormatter.ofPattern("HH:mm")
     }
 
     @TypeConverter
@@ -24,13 +25,13 @@ class Converters {
     }
 
     @TypeConverter
-    fun fromLocalTime(time: LocalTime?): String? = time?.format(DateTimeFormatter.ISO_TIME)
+    fun fromLocalTime(time: LocalTime?): String? = time?.format(FORMAT_TIME)
 
-    @TypeConverters
+    @TypeConverter
     fun toLocalTime(time: String?): LocalTime? = if(time.isNullOrBlank()) {
         null
     }else {
-        LocalTime.parse(time, DateTimeFormatter.ISO_TIME)
+        LocalTime.parse(time, FORMAT_TIME)
     }
 
     @TypeConverter

@@ -13,4 +13,6 @@ interface DayWeatherDao {
     @Insert
     fun addDayWeather(weather: DayWeather): Long
 
+    @Query("SELECT * FROM `weather_day` WHERE `cityId` = :cityId AND `date` >= :start AND `date` <= :end ORDER BY `date` ASC")
+    fun getCityWeatherBetweenDates(cityId: Long, start: LocalDate, end: LocalDate): List<DayWeather>
 }

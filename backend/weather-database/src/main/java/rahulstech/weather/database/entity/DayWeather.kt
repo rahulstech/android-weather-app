@@ -3,6 +3,7 @@ package rahulstech.weather.database.entity
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
+import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import rahulstech.weather.database.util.Converters
 import java.time.LocalDate
@@ -18,6 +19,7 @@ import java.time.LocalTime
     ]
 )
 data class DayWeather (
+    @PrimaryKey(autoGenerate = true)
     val id: Long,
     val cityId: Long,
     @TypeConverters(Converters::class)
@@ -28,8 +30,10 @@ data class DayWeather (
     val temperatureMinC: Float,
     val humidity: Int,
     val uv: Float,
-    val precipitation: Float,
-    val snow: Float,
+    val precipitationMm: Float,
+    val snowCm: Float,
+    @TypeConverters(Converters::class)
     val sunrise: LocalTime,
+    @TypeConverters(Converters::class)
     val sunset: LocalTime,
 )
