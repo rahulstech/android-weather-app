@@ -15,20 +15,13 @@ android {
         versionName "2.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        def localProperties = new Properties()
-        def localPropertiesFile = rootProject.file("local.properties")
-        if (localPropertiesFile.exists()) {
-            localPropertiesFile.withReader("UTF-8") {
-                localProperties.load(it)
-            }
+        vectorDrawables {
+            useSupportLibrary = true
         }
+    }
 
-        buildFeatures {
-            buildConfig = true
-        }
-
-        buildConfigField("String", "WEATHER_API_KEY", "\"${localProperties.getProperty('WEATHER_API_KEY')}\"")
+    buildFeatures {
+        viewBinding true
     }
 
     buildTypes {
@@ -56,6 +49,17 @@ dependencies {
     implementation libs.androidx.activity
     implementation libs.androidx.constraintlayout
     implementation libs.androidx.lifecycle.viewmode.ktx
+
+    // koin di
+    implementation libs.koin.android
+
+    // WeatherIconView
+    implementation libs.weathericonview
+
+    // TextDrawable
+    implementation libs.textdrawable
+
+
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit
     androidTestImplementation libs.androidx.espresso.core

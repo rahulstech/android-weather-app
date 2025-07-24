@@ -6,10 +6,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import rahulstech.android.weatherapp.R
 import rahulstech.android.weatherapp.adapter.WeatherForecastAdapter
 import rahulstech.android.weatherapp.setting.SettingsStorage
 import rahulstech.android.weatherapp.viewmodel.HomeViewModel
+import rahulstech.android.weatherapp.viewmodel.WeatherViewModel
 import rahulstech.weather.repository.WeatherForecast
 
 class WeatherForecastActivity : AppCompatActivity() {
@@ -20,7 +22,7 @@ class WeatherForecastActivity : AppCompatActivity() {
 
     private lateinit var weatherForecastAdapter: WeatherForecastAdapter
 
-    private lateinit var viewModel: HomeViewModel
+    private val viewModel: WeatherViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +36,9 @@ class WeatherForecastActivity : AppCompatActivity() {
         weatherForecastAdapter = WeatherForecastAdapter(this)
         forecasts.adapter = weatherForecastAdapter
 
-        viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-        viewModel.sevenDaysWeatherForecast.observe(this) { onForecastFetched(it) }
+//        viewModel.sevenDaysWeatherForecast.observe(this) { onForecastFetched(it) }
+
+//        viewModel.getForecast()
     }
 
     private fun onForecastFetched(data: List<WeatherForecast>?) {
@@ -51,6 +54,6 @@ class WeatherForecastActivity : AppCompatActivity() {
         super.onStart()
 
         val weatherLocationId = SettingsStorage.get(this).getWeatherLocationId()
-        viewModel.setLocationId(weatherLocationId)
+//        viewModel.setLocationId(weatherLocationId)
     }
 }

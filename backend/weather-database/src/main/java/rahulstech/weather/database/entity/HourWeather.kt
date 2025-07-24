@@ -17,7 +17,7 @@ import java.time.LocalTime
         ForeignKey(entity = City::class, parentColumns = ["id"], childColumns = ["cityId"])
     ],
     indices = [
-        Index(value = ["cityId", "date", "time"], name = "index_city_hour_weather")
+        Index(value = ["cityId", "date", "time"], name = "index_city_hour_weather", unique = true)
     ]
 )
 data class HourWeather(
@@ -39,5 +39,5 @@ data class HourWeather(
     @ColumnInfo(defaultValue = "0")
     val mayRain: Boolean = false,
     @ColumnInfo(defaultValue = "0")
-    val maySnow: Boolean = false,
+    val maySnow: Boolean = false
 )

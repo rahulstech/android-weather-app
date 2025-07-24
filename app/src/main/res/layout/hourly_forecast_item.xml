@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     style="@style/Theme.WeatherApp.HourlyWeatherTile">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="110dp"
+        android:layout_height="180dp"
         android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="top|center_horizontal">
 
         <TextView
             android:id="@+id/label_time"
@@ -16,13 +18,16 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:layout_margin="4dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            tools:text="23:55 AM"/>
 
-        <ImageView
+        <com.github.pwittchen.weathericonview.WeatherIconView
             android:id="@+id/icon_weather_condition"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:layout_margin="8dp"/>
+            android:layout_margin="8dp"
+            app:weatherIconColor="?android:attr/textColorPrimary"
+            app:weatherIconSize="24"/>
 
         <TextView
             android:id="@+id/label_temperature"
@@ -30,7 +35,9 @@
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textStyle="bold"
+            tools:text="100°c"/>
 
         <TextView
             android:id="@+id/label_weather_condition"
@@ -38,11 +45,9 @@
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:maxLines="2"
+            tools:text="Moderate snow with thunder" />
 
     </LinearLayout>
-
-
-
-
 </androidx.cardview.widget.CardView>

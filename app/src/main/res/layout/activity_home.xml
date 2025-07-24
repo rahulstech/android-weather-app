@@ -90,7 +90,12 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/forecast_hourly"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="200dp"
+            tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:orientation="horizontal"
+            tools:itemCount="24"
+            tools:listitem="@layout/hourly_forecast_item"/>
+
 
         <!-- button to navigate weather forecast screen -->
         <Button

@@ -10,11 +10,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import rahulstech.android.weatherapp.R
 import rahulstech.weather.repository.City
+import rahulstech.weather.repository.model.CityModel
 
-val citySearchCallback = object : DiffUtil.ItemCallback<City>() {
-    override fun areItemsTheSame(oldItem: City, newItem: City): Boolean = oldItem.locationId == newItem.locationId
+val citySearchCallback = object : DiffUtil.ItemCallback<CityModel>() {
+    override fun areItemsTheSame(oldItem: CityModel, newItem: CityModel): Boolean = oldItem.remoteId == newItem.remoteId
 
-    override fun areContentsTheSame(oldItem: City, newItem: City): Boolean = oldItem.equals(newItem)
+    override fun areContentsTheSame(oldItem: CityModel, newItem: CityModel): Boolean = oldItem == newItem
 }
 
 class CitySearchResultViewHolder(view: View) : ViewHolder(view) {
@@ -22,19 +23,19 @@ class CitySearchResultViewHolder(view: View) : ViewHolder(view) {
     private val labelCity: TextView = view.findViewById(R.id.label_city)
     private val labelCityDetails: TextView = view.findViewById(R.id.label_city_details)
 
-    fun bind(data: City?) {
+    fun bind(data: CityModel?) {
         if (null == data) {
             labelCity.text = null
             labelCityDetails.text = null
         }
         else {
             labelCity.text = data.name
-            labelCityDetails.text = "${data.region}, ${data.country}"
+            labelCityDetails.text = "${data.name}, ${data.country}"
         }
     }
 }
 
-class CitySearchResultAdapter(context: Context) : ListAdapter<City, CitySearchResultViewHolder>(citySearchCallback) {
+class CitySearchResultAdapter(context: Context) : ListAdapter<CityModel, CitySearchResultViewHolder>(citySearchCallback) {
 
     private val inflater = LayoutInflater.from(context)
 

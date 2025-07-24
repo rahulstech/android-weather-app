@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import rahulstech.weather.database.util.Converters
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 
 @Entity(
@@ -15,7 +16,7 @@ import java.time.LocalTime
         ForeignKey(entity = City::class, parentColumns = ["id"], childColumns = ["cityId"])
     ],
     indices = [
-        Index(value = ["cityId", "date"], name = "index_city_day_weather")
+        Index(value = ["cityId", "date"], name = "index_city_day_weather", unique = true)
     ]
 )
 data class DayWeather (
@@ -36,4 +37,6 @@ data class DayWeather (
     val sunrise: LocalTime,
     @TypeConverters(Converters::class)
     val sunset: LocalTime,
+    @TypeConverters(Converters::class)
+    val lastModified: LocalDateTime = LocalDateTime.now()
 )

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "dea87b67d142a45a5971c66eaf846418",
+    "identityHash": "77d23fa24584bb92b5f1614f782584d2",
     "entities": [
       {
         "tableName": "weather_cities",
@@ -56,17 +56,17 @@
             "name": "unique_remote_city_id",
             "unique": true,
             "columnNames": [
-              "id"
+              "remoteId"
             ],
             "orders": [],
-            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `unique_remote_city_id` ON `${TABLE_NAME}` (`id`)"
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `unique_remote_city_id` ON `${TABLE_NAME}` (`remoteId`)"
           }
         ],
         "foreignKeys": []
       },
       {
         "tableName": "weather_day",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cityId` INTEGER NOT NULL, `date` TEXT NOT NULL, `conditionCode` INTEGER NOT NULL, `iconCode` INTEGER NOT NULL, `temperatureMaxC` REAL NOT NULL, `temperatureMinC` REAL NOT NULL, `humidity` INTEGER NOT NULL, `uv` REAL NOT NULL, `precipitationMm` REAL NOT NULL, `snowCm` REAL NOT NULL, `sunrise` TEXT NOT NULL, `sunset` TEXT NOT NULL, FOREIGN KEY(`cityId`) REFERENCES `weather_cities`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cityId` INTEGER NOT NULL, `date` TEXT NOT NULL, `conditionCode` INTEGER NOT NULL, `iconCode` INTEGER NOT NULL, `temperatureMaxC` REAL NOT NULL, `temperatureMinC` REAL NOT NULL, `humidity` INTEGER NOT NULL, `uv` REAL NOT NULL, `precipitationMm` REAL NOT NULL, `snowCm` REAL NOT NULL, `sunrise` TEXT NOT NULL, `sunset` TEXT NOT NULL, `lastModified` TEXT NOT NULL, FOREIGN KEY(`cityId`) REFERENCES `weather_cities`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -145,6 +145,12 @@
             "columnName": "sunset",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "lastModified",
+            "columnName": "lastModified",
+            "affinity": "TEXT",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -156,13 +162,13 @@
         "indices": [
           {
             "name": "index_city_day_weather",
-            "unique": false,
+            "unique": true,
             "columnNames": [
               "cityId",
               "date"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_city_day_weather` ON `${TABLE_NAME}` (`cityId`, `date`)"
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_city_day_weather` ON `${TABLE_NAME}` (`cityId`, `date`)"
           }
         ],
         "foreignKeys": [
@@ -273,14 +279,14 @@
         "indices": [
           {
             "name": "index_city_hour_weather",
-            "unique": false,
+            "unique": true,
             "columnNames": [
               "cityId",
               "date",
               "time"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_city_hour_weather` ON `${TABLE_NAME}` (`cityId`, `date`, `time`)"
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_city_hour_weather` ON `${TABLE_NAME}` (`cityId`, `date`, `time`)"
           }
         ],
         "foreignKeys": [
@@ -301,7 +307,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'dea87b67d142a45a5971c66eaf846418')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '77d23fa24584bb92b5f1614f782584d2')"
     ]
   }
 }

@@ -2,60 +2,63 @@ package rahulstech.android.weatherapp.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import rahulstech.android.weatherapp.R
-import rahulstech.android.weatherapp.get12HourFormattedTimeText
-import rahulstech.android.weatherapp.getTemperatureCelsiusText
-import rahulstech.android.weatherapp.getWeatherConditionIcon
-import rahulstech.android.weatherapp.getWeatherConditionText
-import rahulstech.weather.repository.HourlyWeather
+import rahulstech.android.weatherapp.databinding.HourlyForecastItemBinding
+import rahulstech.android.weatherapp.util.get12HourFormattedTimeText
+import rahulstech.android.weatherapp.util.getTemperatureCelsiusText
+import rahulstech.android.weatherapp.util.getWeatherConditionIcon
+import rahulstech.android.weatherapp.util.getWeatherConditionText
+import rahulstech.weather.repository.model.HourWeatherModel
 
-class HourlyForecastViewHolder(view: View) : ViewHolder(view) {
+class HourlyForecastViewHolder(
+    private val binding: HourlyForecastItemBinding
+): ViewHolder(binding.root) {
 
-    private val labelTime: TextView = view.findViewById(R.id.label_time)
-    private val iconWeatherCondition: ImageView = view.findViewById(R.id.icon_weather_condition)
-    private val labelTemperature: TextView = view.findViewById(R.id.label_temperature)
-    private val labelCondition: TextView = view.findViewById(R.id.label_weather_condition)
+//    private val labelTime: TextView = view.findViewById(R.id.label_time)
+//    private val iconWeatherCondition: ImageView = view.findViewById(R.id.icon_weather_condition)
+//    private val labelTemperature: TextView = view.findViewById(R.id.label_temperature)
+//    private val labelCondition: TextView = view.findViewById(R.id.label_weather_condition)
 
-    fun bind(data: HourlyWeather?) {
+    fun bind(data: HourWeatherModel?) {
         if (null == data) {
-            labelTime.text = null
-            iconWeatherCondition.setImageDrawable(null)
-            labelTemperature.text = null
-            labelCondition.text = null
+            binding.apply {
+                labelTime.text = null
+                iconWeatherCondition.setIconResource(null)
+                labelTemperature.text = null
+                labelWeatherCondition.text = null
+            }
         }
         else {
-            val condition = data.condition
             val context = itemView.context
-
-            labelTime.text = get12HourFormattedTimeText(data.datetime.toLocalTime())
-            iconWeatherCondition.setImageDrawable(getWeatherConditionIcon(context, condition, data.isDay))
-            labelTemperature.text = getTemperatureCelsiusText(data.temp)
-            labelCondition.text = getWeatherConditionText(context, condition, data.isDay)
+            binding.apply {
+                labelTime.text = get12HourFormattedTimeText(data.datetime.toLocalTime())
+                iconWeatherCondition.setIconResource(getWeatherConditionIcon(context, data.conditionIconCode, data.isDay))
+                labelTemperature.text = getTemperatureCelsiusText(data.temperatureC)
+                labelWeatherCondition.text = getWeatherConditionText(context, data.conditionCode)
+            }
         }
     }
 }
 
-val callback = object : DiffUtil.ItemCallback<HourlyWeather>() {
-    override fun areItemsTheSame(oldItem: HourlyWeather, newItem: HourlyWeather): Boolean = oldItem.datetime.isEqual(newItem.datetime)
+val callback = object : DiffUtil.ItemCallback<HourWeatherModel>() {
+    override fun areItemsTheSame(oldItem: HourWeatherModel, newItem: HourWeatherModel): Boolean = oldItem.datetime.isEqual(newItem.datetime)
 
-    override fun areContentsTheSame(oldItem: HourlyWeather, newItem: HourlyWeather): Boolean = oldItem.equals(newItem)
+    override fun areContentsTheSame(oldItem: HourWeatherModel, newItem: HourWeatherModel): Boolean =
+        oldItem == newItem
 }
 
 class HourlyForecastAdapter(context: Context)
-    : ListAdapter<HourlyWeather, HourlyForecastViewHolder>(callback) {
+    : ListAdapter<HourWeatherModel, HourlyForecastViewHolder>(callback) {
 
     private val inflater = LayoutInflater.from(context)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HourlyForecastViewHolder {
-        val view = inflater.inflate(R.layout.hourly_forecast_item,parent,false)
-        return HourlyForecastViewHolder(view)
+        val binding = HourlyForecastItemBinding.inflate(inflater, parent, false)
+        return HourlyForecastViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: HourlyForecastViewHolder, position: Int) {

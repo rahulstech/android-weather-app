@@ -34,6 +34,8 @@ dependencies {
     api libs.retrofit
     api libs.retrofir.converter.gson
 
+    testImplementation libs.mockwebserver
+
     implementation libs.androidx.core.ktx
     implementation libs.androidx.appcompat
     testImplementation libs.junit

@@ -52,7 +52,8 @@ class FakeData1: FakeData {
             "humidity" to 43,
             "uv" to .2f,
             "sunrise" to "05:50",
-            "sunset" to "18:50"
+            "sunset" to "18:50",
+            "lastModified" to "2025-06-30 00:00"
         ))
 
         db.insert("weather_day", SQLiteDatabase.CONFLICT_FAIL, contentValuesOf(
@@ -68,7 +69,8 @@ class FakeData1: FakeData {
             "humidity" to 40,
             "uv" to .3f,
             "sunrise" to "05:51",
-            "sunset" to "18:49"
+            "sunset" to "18:49",
+            "lastModified" to "2025-07-02 00:00"
         ))
 
         // add hour weather

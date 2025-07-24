@@ -10,10 +10,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import rahulstech.android.weatherapp.BuildConfig
 import rahulstech.android.weatherapp.R
-import rahulstech.android.weatherapp.getWeatherConditionIcon
-import rahulstech.android.weatherapp.getWeatherConditionText
+import rahulstech.android.weatherapp.util.getWeatherConditionIcon
+import rahulstech.android.weatherapp.util.getWeatherConditionText
 import rahulstech.weather.repository.WeatherForecast
 import java.time.format.DateTimeFormatter
 
@@ -40,11 +39,11 @@ class WeatherForecastViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val day = data.day
             val condition = day.condition
 
-            iconWeatherCondition.setImageDrawable(getWeatherConditionIcon(context, condition, true))
-            labelWeatherCondition.text = getWeatherConditionText(context, condition, true)
-            labelDate.text = day.date.format(FORMAT_FORECAST_DAY)
-            labelTemp.text = context.getString(R.string.text_forecast_temp_c, day.maxTemp, day.minTemp)
-            labelPrecip.text = context.getString(R.string.text_forecast_precipitation, day.totalPrecipitation)
+//            iconWeatherCondition.setImageDrawable(getWeatherConditionIcon(context, condition, true))
+//            labelWeatherCondition.text = getWeatherConditionText(context, condition, true)
+//            labelDate.text = day.date.format(FORMAT_FORECAST_DAY)
+//            labelTemp.text = context.getString(R.string.text_forecast_temp_c, day.maxTemp, day.minTemp)
+//            labelPrecip.text = context.getString(R.string.text_forecast_precipitation, day.totalPrecipitation)
         }
     }
 }
@@ -74,9 +73,7 @@ class WeatherForecastAdapter(context: Context) :
 
     override fun onBindViewHolder(holder: WeatherForecastViewHolder, position: Int) {
         val item = getItem(position)
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "binding forecast $item")
-        }
+        Log.d(TAG, "binding forecast $item")
         holder.bind(item)
     }
 }

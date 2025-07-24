@@ -47,4 +47,18 @@ class CityDaoTest {
 
         assertEquals(expected, actual)
     }
+
+    @Test
+    fun testGetCityById() {
+        val expected = City(1L, "London", "United Kingdom", 12.563f, 0.5645f, "12356")
+        val actual = dao.getCityById(1)
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun testGetCityById_Unknown() {
+        val expected = null
+        val actual = dao.getCityById(3)
+        assertEquals(expected, actual)
+    }
 }

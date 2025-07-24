@@ -39,7 +39,7 @@ android {
 
     kapt {
         arguments {
-            arg('room.schemaLocaltion', "$projectDir/schemas")
+            arg('room.schemaLocation', "$projectDir/schemas")
         }
     }
 
@@ -51,13 +51,13 @@ android {
 dependencies {
 
     // room
+    implementation libs.room.ktx
     api libs.room.runtime
+    //noinspection KaptUsageInsteadOfKsp
     kapt libs.room.compiler
 
     implementation libs.androidx.core.ktx
     implementation libs.androidx.appcompat
-    implementation libs.material
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit
-    androidTestImplementation libs.androidx.espresso.core
 }

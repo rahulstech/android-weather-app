@@ -13,10 +13,10 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/backend" />
             <option value="$PROJECT_DIR$/backend/weather-api" />
+            <option value="$PROJECT_DIR$/backend/weather-database" />
             <option value="$PROJECT_DIR$/backend/weather-repository" />
           </set>
         </option>
-        <option name="resolveExternalAnnotations" value="false" />
       </GradleProjectSettings>
     </option>
   </component>

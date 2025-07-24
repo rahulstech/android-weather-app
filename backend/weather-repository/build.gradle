@@ -12,6 +12,20 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+
+        def localProperties = new Properties()
+        def localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            localPropertiesFile.withReader("UTF-8") {
+                localProperties.load(it)
+            }
+        }
+
+        buildFeatures {
+            buildConfig = true
+        }
+
+        buildConfigField("String", "WEATHER_API_KEY", "\"${localProperties.getProperty('WEATHER_API_KEY')}\"")
     }
 
     buildTypes {
@@ -32,6 +46,9 @@ android {
 dependencies {
 
     api project(':backend:weather-api')
+    implementation project(':backend:weather-database')
+
+    compileOnly libs.koin.android
 
     implementation libs.androidx.core.ktx
     implementation libs.androidx.appcompat
