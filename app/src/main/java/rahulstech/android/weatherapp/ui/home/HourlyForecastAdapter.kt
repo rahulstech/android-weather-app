@@ -1,4 +1,4 @@
-package rahulstech.android.weatherapp.adapter
+package rahulstech.android.weatherapp.ui.home
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import rahulstech.android.weatherapp.R
 import rahulstech.android.weatherapp.databinding.HourlyForecastItemBinding
 import rahulstech.android.weatherapp.util.get12HourFormattedTimeText
 import rahulstech.android.weatherapp.util.getTemperatureCelsiusText

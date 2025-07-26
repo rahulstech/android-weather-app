@@ -1,5 +1,6 @@
 package rahulstech.android.weatherapp.helper
 
+import android.graphics.Rect
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
@@ -11,7 +12,10 @@ interface OnRecyclerViewItemClickListener {
     fun onClickItem(recyclerView: RecyclerView, itemView: View, adapterPosition: Int)
 }
 
-class RecyclerViewItemClickHelper(private val recyclerView: RecyclerView) : RecyclerView.SimpleOnItemTouchListener() {
+class RecyclerViewItemClickHelper(
+    private val recyclerView: RecyclerView,
+    val excludedChildViewIds: IntArray = intArrayOf()
+) : RecyclerView.SimpleOnItemTouchListener() {
 
     private val gestureListener = object : GestureDetector.SimpleOnGestureListener() {
 
@@ -32,6 +36,9 @@ class RecyclerViewItemClickHelper(private val recyclerView: RecyclerView) : Recy
         val listener = clickListenerRef.get() ?: return false
         val itemView: View = getItemViewUnderTouch(recyclerView, e) ?: return false
         val adapterPosition = recyclerView.getChildAdapterPosition(itemView)
+        if (isTouchOnExcludedChild(e,itemView,excludedChildViewIds)) {
+            return false
+        }
         listener.onClickItem(recyclerView, itemView, adapterPosition)
         return true
     }
@@ -40,5 +47,21 @@ class RecyclerViewItemClickHelper(private val recyclerView: RecyclerView) : Recy
         val touchX = e.x
         val touchY = e.y
         return recyclerView.findChildViewUnder(touchX, touchY)
+    }
+
+    private fun isTouchOnExcludedChild(e: MotionEvent, itemView: View, excludedChildViewIds: IntArray): Boolean {
+        val coordinates = IntArray(2)
+        itemView.getLocationOnScreen(coordinates)
+        val touchX = e.rawX - coordinates[0]
+        val touchyY = e.rawY - coordinates[1]
+
+        return excludedChildViewIds.any { viewId ->
+            val view = itemView.findViewById<View>(viewId)
+            view?.let {
+                val rect = Rect()
+                it.getHitRect(rect)
+                rect.contains(touchX.toInt(), touchyY.toInt())
+            } == true
+        }
     }
 }

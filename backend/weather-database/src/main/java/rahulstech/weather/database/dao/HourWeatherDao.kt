@@ -1,6 +1,5 @@
 package rahulstech.weather.database.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -10,7 +9,6 @@ import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 import rahulstech.weather.database.entity.HourWeather
 import java.time.LocalDate
-import java.time.LocalTime
 
 @Dao
 interface HourWeatherDao {
@@ -22,9 +20,6 @@ interface HourWeatherDao {
     @Update
     fun updateHourWeather(weather: HourWeather): Int
 
-    @Query("SELECT * FROM `weather_hourly` WHERE `cityId` = :cityId AND `date` = :date AND `time` = :time")
-    fun getCityHourlyWeatherForHour(cityId: Long, date: LocalDate, time: LocalTime): Flow<HourWeather?>
-
     @Query("SELECT * FROM `weather_hourly` WHERE `cityId` = :cityId AND `date` = :date")
-    fun getCityHourlyWeatherForWholeDay(cityId: Long, date: LocalDate): List<HourWeather>
+    fun getCityHourlyWeatherForWholeDay(cityId: Long, date: LocalDate): Flow<List<HourWeather>>
 }

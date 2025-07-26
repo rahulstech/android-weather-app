@@ -59,6 +59,9 @@ dependencies {
     // TextDrawable
     implementation libs.textdrawable
 
+    // shimmer
+    implementation libs.shimmer
+
 
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit

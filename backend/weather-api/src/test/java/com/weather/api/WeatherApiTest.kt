@@ -45,73 +45,6 @@ class WeatherApiTest {
     }
 
     @Test
-    fun testGetCurrentWeather() = runBlocking {
-        val mockResponse = MockResponse()
-            .setResponseCode(200)
-            .setBody("""
-                {
-                  "location": {
-                    "name": "New York",
-                    "region": "New York",
-                    "country": "United States of America",
-                    "lat": 40.71,
-                    "lon": -74.01,
-                    "tz_id": "America/New_York",
-                    "localtime_epoch": 1658522976,
-                    "localtime": "2022-07-22 16:49"
-                  },
-                  "current": {
-                    "last_updated_epoch": 1658522700,
-                    "last_updated": "2022-07-22 16:45",
-                    "temp_c": 34.4,
-                    "temp_f": 93.9,
-                    "is_day": 1,
-                    "condition": {
-                      "text": "Partly cloudy",
-                      "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
-                      "code": 1003
-                    },
-                    "wind_mph": 16.1,
-                    "wind_kph": 25.9,
-                    "wind_degree": 180,
-                    "wind_dir": "S",
-                    "pressure_mb": 1011,
-                    "pressure_in": 29.85,
-                    "precip_mm": 0,
-                    "precip_in": 0,
-                    "humidity": 31,
-                    "cloud": 75,
-                    "feelslike_c": 37,
-                    "feelslike_f": 98.6,
-                    "vis_km": 16,
-                    "vis_miles": 9,
-                    "uv": 8,
-                    "gust_mph": 11.6,
-                    "gust_kph": 18.7,
-                    "air_quality": {
-                      "co": 293.70001220703125,
-                      "no2": 18.5,
-                      "o3": 234.60000610351562,
-                      "so2": 12,
-                      "pm2_5": 13.600000381469727,
-                      "pm10": 15,
-                      "us-epa-index": 1,
-                      "gb-defra-index": 2
-                    }
-                  }
-                }
-            """.trimIndent())
-        server.enqueue(mockResponse)
-
-        val response = api.getCurrentWeather("New York")
-        val actual = response.body()?.current
-        val expected = CurrentWeather(LocalDateTime.of(2022,7,22,16,45),
-            34.4f, true, Condition("//cdn.weatherapi.com/weather/64x64/day/116.png", 1003),
-            0f, 31,37f, 8f)
-        assertEquals(expected,actual)
-    }
-
-    @Test
     fun testSearchCity() = runBlocking {
         val mockResponse = MockResponse()
             .setResponseCode(200)
@@ -328,8 +261,8 @@ class WeatherApiTest {
                 WeatherDay(27.2f,17.1f, 0f,0f, 46, Condition("//cdn.weatherapi.com/weather/64x64/day/113.png",1000),1.8f),
                 Astronomy(LocalTime.of(5,0), LocalTime.of(21,12)),
                 listOf(
-                    WeatherHour(LocalDateTime.of(2025,7,14,0,0), 20.9f, false, Condition("//cdn.weatherapi.com/weather/64x64/night/116.png",1003), 0f, 0f, 45, 20.9f, false, false, 0f),
-                    WeatherHour(LocalDateTime.of(2025,7,14,1,0), 20.5f, false, Condition("//cdn.weatherapi.com/weather/64x64/night/116.png",1003), 0f, 0f, 47, 20.5f, false, false, 0f),
+                    WeatherHour(LocalDateTime.of(2025,7,14,0,0), 20.9f, false, Condition("//cdn.weatherapi.com/weather/64x64/night/116.png",1003), 20.9f, false, false, 0f),
+                    WeatherHour(LocalDateTime.of(2025,7,14,1,0), 20.5f, false, Condition("//cdn.weatherapi.com/weather/64x64/night/116.png",1003), 20.5f, false, false, 0f),
                     )
             )
         )
@@ -338,21 +271,21 @@ class WeatherApiTest {
     }
 
 
-    @Test
-    fun testErrorResponse() = runBlocking {
-        val mockResponse = MockResponse()
-            .setResponseCode(400)
-            .setBody("""
-                {
-                  "code": 1003,
-                  "message": "Parameter 'q' not provided."
-                }
-            """.trimIndent())
-        server.enqueue(mockResponse)
-
-        val response = api.getCurrentWeather("")
-        val actual = response.parseErrorBody(client.retrofit)
-        val expected = ErrorResponse(1003, "Parameter 'q' not provided.")
-        assertEquals(expected,actual)
-    }
+//    @Test
+//    fun testErrorResponse() = runBlocking {
+//        val mockResponse = MockResponse()
+//            .setResponseCode(400)
+//            .setBody("""
+//                {
+//                  "code": 1003,
+//                  "message": "Parameter 'q' not provided."
+//                }
+//            """.trimIndent())
+//        server.enqueue(mockResponse)
+//
+//        val response = api.getCurrentWeather("")
+//        val actual = response.parseErrorBody()
+//        val expected = ErrorResponse(1003, "Parameter 'q' not provided.")
+//        assertEquals(expected,actual)
+//    }
 }

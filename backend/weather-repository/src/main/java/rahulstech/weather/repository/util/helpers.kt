@@ -28,6 +28,9 @@ internal fun CityModel.toCity(cityId: Long = id): City = City(cityId, name, coun
 
 internal fun City.toCityModel(): CityModel = CityModel(id, name, country, longitude, latitude, remoteId)
 
+@JvmName("cityListToCityModelList")
+internal fun List<City>.toCityModelList(): List<CityModel> = map { city -> city.toCityModel() }
+
 internal fun DayWeather.toDayWeatherModel(): DayWeatherModel {
     return DayWeatherModel(id, cityId, date, conditionCode, iconCode,
         floor(temperatureMaxC).toInt(), floor(temperatureMinC).toInt(), humidity, uv, precipitationMm, snowCm,

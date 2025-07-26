@@ -23,4 +23,8 @@ interface WeatherRepository {
     suspend fun getForecast(cityId: Long): Flow<Resource<List<DayWeatherModel>>>
 
     suspend fun findCityById(cityId: Long): Flow<Resource<CityModel>>
+
+    suspend fun getAllSavedCities(): Flow<Resource<List<CityModel>>>
+
+    suspend fun removeCity(cityId: Long): Flow<Resource<CityModel>>
 }

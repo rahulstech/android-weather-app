@@ -1,4 +1,4 @@
-package rahulstech.android.weatherapp.viewmodel
+package rahulstech.android.weatherapp.ui.home
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -27,7 +27,8 @@ class HomeViewModel(
     val city: Flow<Resource<CityModel>> get() = _city
     private val _dailyForecast = MutableStateFlow<Resource<DayWeatherModel>>(Resource.Loading())
     val dailyForecast: Flow<Resource<DayWeatherModel>> get() = _dailyForecast
-    private val _hourlyForecast = MutableStateFlow<Resource<List<HourWeatherModel>>>(Resource.Loading())
+    private val _hourlyForecast =
+        MutableStateFlow<Resource<List<HourWeatherModel>>>(Resource.Loading())
     val hourlyForecast: Flow<Resource<List<HourWeatherModel>>> get() = _hourlyForecast
     private val _cityId = MutableStateFlow<Long?>(null)
     init {

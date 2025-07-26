@@ -14,7 +14,7 @@ import java.time.LocalTime
 @Entity(
     tableName = "weather_hourly",
     foreignKeys = [
-        ForeignKey(entity = City::class, parentColumns = ["id"], childColumns = ["cityId"])
+        ForeignKey(entity = City::class, parentColumns = ["id"], childColumns = ["cityId"], onDelete = ForeignKey.CASCADE)
     ],
     indices = [
         Index(value = ["cityId", "date", "time"], name = "index_city_hour_weather", unique = true)

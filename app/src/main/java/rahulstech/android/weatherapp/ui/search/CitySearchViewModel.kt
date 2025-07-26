@@ -1,4 +1,4 @@
-package rahulstech.android.weatherapp.viewmodel
+package rahulstech.android.weatherapp.ui.search
 
 import android.app.Application
 import android.util.Log
@@ -6,47 +6,57 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import rahulstech.weather.repository.WeatherRepository
 import rahulstech.weather.repository.model.CityModel
-import rahulstech.weather.repository.model.CurrentWeatherModel
-import rahulstech.weather.repository.model.DayWeatherModel
 import rahulstech.weather.repository.util.Resource
 
-open class WeatherViewModel(app: Application, val repository: WeatherRepository): AndroidViewModel(app) {
+class CitySearchViewModel(
+    app: Application,
+    val repository: WeatherRepository
+): AndroidViewModel(app) {
 
-    companion object {
-        private val TAG = WeatherViewModel::class.simpleName
+    private val TAG = CitySearchViewModel::class.simpleName
+
+    private var _savedCities: Flow<Resource<List<CityModel>>>? = null
+    suspend fun getAllCities(): Flow<Resource<List<CityModel>>> {
+        if (null == _savedCities) {
+            _savedCities = repository.getAllSavedCities()
+        }
+        return _savedCities!!
     }
 
-    private val forecast = MutableStateFlow< Resource<List<DayWeatherModel>>>(Resource.Success(emptyList()))
-
-    fun getForecast(cityId: Long): Flow<Resource<List<DayWeatherModel>>> {
+    private val _removeCityResult = MutableStateFlow<Resource<CityModel>?>(null)
+    val removeCityResult: Flow<Resource<CityModel>?> get() = _removeCityResult
+    private val _removeCityRequest = MutableSharedFlow<CityModel>(extraBufferCapacity = 32)
+    init {
         viewModelScope.launch {
-            repository.getForecast(cityId)
-                .flowOn(Dispatchers.IO)
-                .collect { result ->
-                    forecast.value = result
+            _removeCityRequest
+                .collect { city ->
+                    repository.removeCity(city.id)
+                        .flowOn(Dispatchers.IO)
+                        .collect { resource ->
+                            _removeCityResult.value = resource
+                        }
                 }
         }
-        return forecast
+    }
+
+    fun removeCity(city: CityModel) {
+        _removeCityRequest.tryEmit(city)
     }
 
 
-
-
-    private val _citySearchResult = MutableStateFlow<Resource<List<CityModel>>>(Resource.Success(emptyList()))
+    private val _citySearchResult =
+        MutableStateFlow<Resource<List<CityModel>>>(Resource.Success(emptyList()))
     val citySearchResult: Flow<Resource<List<CityModel>>> get() = _citySearchResult
     private val _citySearchKeyword = MutableStateFlow<String?>(null)
     init {

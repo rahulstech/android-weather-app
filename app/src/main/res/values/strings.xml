@@ -1,31 +1,29 @@
 <resources>
     <string name="app_name">Weather App</string>
-    <string name="text_uv">UV Index</string>
-    <string name="text_precipitation">Precipitation</string>
-    <string name="text_wind">Wind</string>
-    <string name="text_humidity">Humidity</string>
-    <string name="text_sunrise">Sunrise</string>
-    <string name="text_sunset">Sunset</string>
-    <string name="text_other_temp_c">%.2f°c / %.2f°c feels like %.2f°c</string>
-    <string name="text_uv_low">Low</string>
-    <string name="text_uv_moderate">Moderate</string>
-    <string name="text_uv_high">High</string>
-    <string name="text_uv_very_high">Very High</string>
-    <string name="text_uv_extream">Extream</string>
-    <string name="text_sunny">Sunny</string>
-    <string name="text_clear">Clear</string>
-    <string name="text_fog">Fog</string>
-    <string name="text_mist">Mist</string>
-    <string name="text_cloudy">Cloudy</string>
-    <string name="text_rainy">Rain</string>
-    <string name="text_thunder">Thunder</string>
-    <string name="text_snowfall">Snowfall</string>
-    <string name="text_sleet">Sleet</string>
-    <string name="text_blizzard">Blizzard</string>
-    <string name="text_search_city">Search city</string>
+    <string name="activity_daily_forecast">Daily Forecast</string>
+    <string name="activity_search_city">Search City</string>
+
+    <string name="label_uv_index">UV Index</string>
+    <string name="label_precipitation">Precipitation</string>
+    <string name="label_humidity">Humidity</string>
+    <string name="label_sunrise">Sunrise</string>
+    <string name="label_sunset">Sunset</string>
+    <string name="label_search_city">Search city</string>
     <string name="text_load_more_cities">Load more cities...</string>
     <string name="message_current_location_changed">location changed to %s</string>
     <string name="text_weather_forecast">Weather Forecast</string>
-    <string name="text_forecast_temp_c">%.2f°c/%.2f°c</string>
-    <string name="text_forecast_precipitation">%.2f%%</string>
+
+    <string name="label_temperature_min_max">Min / Max</string>
+    <string name="label_temperature_feels_like">Feels like</string>
+
+    <string name="text_city_name">%1$s, %2$s</string>
+    <string name="text_temp_min_max">%1$s / %2$s</string>
+    <string name="text_precipitation_mm">%.2f mm</string>
+    <string name="text_humidity_percentage">%d%%</string>
+    <string name="text_city_changed_successfully">city changed successfully</string>
+    <string name="text_saving_city">saving city</string>
+    <string name="text_city_not_saved">city not saved</string>
+    <string name="text_city_removed_successfully">%1$s removed</string>
+
+
 </resources>

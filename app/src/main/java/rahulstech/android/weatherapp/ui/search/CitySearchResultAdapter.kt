@@ -1,5 +1,6 @@
-package rahulstech.android.weatherapp.adapter
+package rahulstech.android.weatherapp.ui.search
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import rahulstech.android.weatherapp.R
-import rahulstech.weather.repository.City
+import rahulstech.android.weatherapp.databinding.ItemCitySearchResultBinding
 import rahulstech.weather.repository.model.CityModel
 
 val citySearchCallback = object : DiffUtil.ItemCallback<CityModel>() {
@@ -18,30 +19,41 @@ val citySearchCallback = object : DiffUtil.ItemCallback<CityModel>() {
     override fun areContentsTheSame(oldItem: CityModel, newItem: CityModel): Boolean = oldItem == newItem
 }
 
-class CitySearchResultViewHolder(view: View) : ViewHolder(view) {
-
-    private val labelCity: TextView = view.findViewById(R.id.label_city)
-    private val labelCityDetails: TextView = view.findViewById(R.id.label_city_details)
+class CitySearchResultViewHolder(
+    val binding: ItemCitySearchResultBinding,
+) : ViewHolder(binding.root) {
 
     fun bind(data: CityModel?) {
         if (null == data) {
-            labelCity.text = null
-            labelCityDetails.text = null
+            binding.apply {
+                labelCityDetails.text = null
+            }
+
         }
         else {
-            labelCity.text = data.name
-            labelCityDetails.text = "${data.name}, ${data.country}"
+            binding.apply {
+                labelCityDetails.text = itemView.context.getString(R.string.text_city_name, data.name, data.country)
+            }
         }
     }
 }
 
-class CitySearchResultAdapter(context: Context) : ListAdapter<CityModel, CitySearchResultViewHolder>(citySearchCallback) {
+class CitySearchResultAdapter(
+    context: Context
+) : ListAdapter<CityModel, CitySearchResultViewHolder>(citySearchCallback) {
 
     private val inflater = LayoutInflater.from(context)
+    private var lastSelection: Long = 0
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateSelection(selection: Long) {
+        lastSelection = selection
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CitySearchResultViewHolder {
-        val view = inflater.inflate(R.layout.item_city_search_result, parent, false)
-        return CitySearchResultViewHolder(view)
+        val binding = ItemCitySearchResultBinding.inflate(inflater, parent, false)
+        return CitySearchResultViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: CitySearchResultViewHolder, position: Int) {

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "77d23fa24584bb92b5f1614f782584d2",
+    "identityHash": "2597f4f2228aa57501be878d6d66c71b",
     "entities": [
       {
         "tableName": "weather_cities",
@@ -66,7 +66,7 @@
       },
       {
         "tableName": "weather_day",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cityId` INTEGER NOT NULL, `date` TEXT NOT NULL, `conditionCode` INTEGER NOT NULL, `iconCode` INTEGER NOT NULL, `temperatureMaxC` REAL NOT NULL, `temperatureMinC` REAL NOT NULL, `humidity` INTEGER NOT NULL, `uv` REAL NOT NULL, `precipitationMm` REAL NOT NULL, `snowCm` REAL NOT NULL, `sunrise` TEXT NOT NULL, `sunset` TEXT NOT NULL, `lastModified` TEXT NOT NULL, FOREIGN KEY(`cityId`) REFERENCES `weather_cities`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cityId` INTEGER NOT NULL, `date` TEXT NOT NULL, `conditionCode` INTEGER NOT NULL, `iconCode` INTEGER NOT NULL, `temperatureMaxC` REAL NOT NULL, `temperatureMinC` REAL NOT NULL, `humidity` INTEGER NOT NULL, `uv` REAL NOT NULL, `precipitationMm` REAL NOT NULL, `snowCm` REAL NOT NULL, `sunrise` TEXT NOT NULL, `sunset` TEXT NOT NULL, `lastModified` TEXT NOT NULL, FOREIGN KEY(`cityId`) REFERENCES `weather_cities`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -174,7 +174,7 @@
         "foreignKeys": [
           {
             "table": "weather_cities",
-            "onDelete": "NO ACTION",
+            "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
               "cityId"
@@ -187,7 +187,7 @@
       },
       {
         "tableName": "weather_hourly",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cityId` INTEGER NOT NULL, `date` TEXT NOT NULL, `time` TEXT NOT NULL, `isDay` INTEGER NOT NULL, `lastModified` TEXT NOT NULL, `conditionCode` INTEGER NOT NULL, `iconCode` INTEGER NOT NULL, `temperatureC` REAL NOT NULL, `temperatureFeelsLikeC` REAL NOT NULL, `uv` REAL NOT NULL, `mayRain` INTEGER NOT NULL DEFAULT 0, `maySnow` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(`cityId`) REFERENCES `weather_cities`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cityId` INTEGER NOT NULL, `date` TEXT NOT NULL, `time` TEXT NOT NULL, `isDay` INTEGER NOT NULL, `lastModified` TEXT NOT NULL, `conditionCode` INTEGER NOT NULL, `iconCode` INTEGER NOT NULL, `temperatureC` REAL NOT NULL, `temperatureFeelsLikeC` REAL NOT NULL, `uv` REAL NOT NULL, `mayRain` INTEGER NOT NULL DEFAULT 0, `maySnow` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(`cityId`) REFERENCES `weather_cities`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -292,7 +292,7 @@
         "foreignKeys": [
           {
             "table": "weather_cities",
-            "onDelete": "NO ACTION",
+            "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
               "cityId"
@@ -307,7 +307,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '77d23fa24584bb92b5f1614f782584d2')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2597f4f2228aa57501be878d6d66c71b')"
     ]
   }
 }

@@ -4,113 +4,431 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.HomeActivity">
+    tools:context=".ui.home.HomeActivity">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_horizontal">
 
         <!-- weather summary -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="12dp"
-            android:layout_marginBottom="24dp">
 
+        <!-- start of weather summary shimmer content -->
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/weather_summary_shimmer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:shimmer_duration="@integer/shimmer_effect_duration"
+            tools:visibility="gone">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="24dp">
+
+                <View
+                    android:id="@+id/placeholder_city_name"
+                    android:layout_width="220dp"
+                    android:layout_height="24dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:background="@color/shimmer_background"/>
+
+                <View
+                    android:id="@+id/placeholder_datetime"
+                    android:layout_width="200dp"
+                    android:layout_height="18dp"
+                    app:layout_constraintTop_toBottomOf="@id/placeholder_city_name"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/shimmer_background"/>
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/placeholder_guideline1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent=".5" />
+
+                <View
+                    android:id="@+id/place_temperature"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    app:layout_constraintTop_toBottomOf="@id/placeholder_datetime"
+                    app:layout_constraintStart_toStartOf="@id/placeholder_guideline1"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginStart="6dp"
+                    android:background="@color/shimmer_background"/>
+
+                <View
+                    android:id="@+id/place_weather_icon"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    app:layout_constraintTop_toBottomOf="@id/placeholder_datetime"
+                    app:layout_constraintEnd_toEndOf="@id/placeholder_guideline1"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="6dp"
+                    android:background="@color/shimmer_background"/>
+
+                <View
+                    android:id="@+id/placeholder_weather_condition"
+                    android:layout_width="200dp"
+                    android:layout_height="18dp"
+                    app:layout_constraintTop_toBottomOf="@id/place_temperature"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/shimmer_background"/>
+
+                <View
+                    android:id="@+id/placeholder_label_temp_min_max"
+                    android:layout_width="100dp"
+                    android:layout_height="18dp"
+                    app:layout_constraintTop_toBottomOf="@id/placeholder_weather_condition"
+                    app:layout_constraintEnd_toEndOf="@id/placeholder_guideline1"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="@color/shimmer_background"/>
+
+                <View
+                    android:id="@+id/placeholder_text_temp_min_max"
+                    android:layout_width="100dp"
+                    android:layout_height="22dp"
+                    app:layout_constraintTop_toBottomOf="@id/placeholder_label_temp_min_max"
+                    app:layout_constraintEnd_toEndOf="@id/placeholder_guideline1"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="@color/shimmer_background"/>
+
+                <View
+                    android:id="@+id/placeholder_label_temp_feels_like"
+                    android:layout_width="100dp"
+                    android:layout_height="18dp"
+                    app:layout_constraintTop_toBottomOf="@id/placeholder_weather_condition"
+                    app:layout_constraintStart_toStartOf="@id/placeholder_guideline1"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="12dp"
+                    android:background="@color/shimmer_background"/>
+
+                <View
+                    android:id="@+id/placeholder_text_temp_feels_like"
+                    android:layout_width="100dp"
+                    android:layout_height="22dp"
+                    app:layout_constraintTop_toBottomOf="@id/placeholder_label_temp_feels_like"
+                    app:layout_constraintStart_toStartOf="@id/placeholder_guideline1"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="12dp"
+                    android:background="@color/shimmer_background"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <!-- end of weather summary shimmer content -->
+
+        <!-- start of weather summary content -->
             <TextView
                 android:id="@+id/label_city"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 android:textAlignment="center"
-                android:layout_margin="4dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                tools:text="Kolkata, India"/>
 
             <TextView
-                android:id="@+id/dateTime"
+                android:id="@+id/label_datetime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/label_city"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 android:textAlignment="center"
-                android:layout_margin="4dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                tools:text="Fir, July 25, 2025 08:02 AM"/>
+
+            <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".5" />
+
+            <TextView
+                android:id="@+id/label_temperature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/label_datetime"
+                app:layout_constraintStart_toStartOf="@id/guideline1"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="6dp"
+                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
+                android:gravity="top|center_vertical"
+                tools:text="23°c"/>
+
+            <com.github.pwittchen.weathericonview.WeatherIconView
+                android:id="@+id/weather_condition_icon"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                app:layout_constraintTop_toTopOf="@id/label_temperature"
+                app:layout_constraintBottom_toBottomOf="@id/label_temperature"
+                app:layout_constraintEnd_toEndOf="@id/guideline1"
+                android:layout_marginEnd="6dp"
+                app:weatherIconSize="36"
+                app:weatherIconColor="?attr/colorOnBackground"/>
+
+            <TextView
+                android:id="@+id/label_weather_condition"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                app:layout_constraintTop_toBottomOf="@id/label_temperature"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textAlignment="center"
+                android:layout_marginTop="8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                tools:text="Moderate freezing drizzle"/>
+
+            <TextView
+                android:id="@+id/label_temp_min_max"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintTop_toBottomOf="@id/label_weather_condition"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/guideline1"
+                app:layout_constraintHorizontal_bias="1"
+                android:gravity="center"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="12dp"
+                android:text="@string/label_temperature_min_max"
+                android:textAppearance="@style/TextAppearance.Material3.LabelMedium"/>
+
+            <TextView
+                android:id="@+id/text_temp_min_max"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintTop_toBottomOf="@id/label_temp_min_max"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/guideline1"
+                app:layout_constraintHorizontal_bias="1"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="12dp"
+                android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                tools:text="22°c / 26°c"/>
+
+            <TextView
+                android:id="@+id/label_temp_feels_like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintTop_toBottomOf="@id/label_weather_condition"
+                app:layout_constraintStart_toStartOf="@id/guideline1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                android:gravity="center"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="12dp"
+                android:text="@string/label_temperature_feels_like"
+                android:textAppearance="@style/TextAppearance.Material3.LabelMedium"/>
+
+            <TextView
+                android:id="@+id/text_temp_feels_like"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintTop_toBottomOf="@id/label_temp_min_max"
+                app:layout_constraintStart_toStartOf="@id/guideline1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="12dp"
+                android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                tools:text="24°c"/>
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/weather_summary_group"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="invisible"
+            app:constraint_referenced_ids="label_city,label_datetime,weather_condition_icon,label_temperature,label_weather_condition,label_temp_min_max,text_temp_min_max,label_temp_feels_like,text_temp_feels_like"
+            tools:visibility="visible"/>
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/weather_summary_barrier"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="label_city,label_datetime,weather_condition_icon,label_temperature,label_weather_condition,label_temp_min_max,text_temp_min_max,label_temp_feels_like,text_temp_feels_like"/>
+
+        <!-- end of weather summary main content -->
+
+        <!-- hourly forecast -->
+
+        <!-- start of hourly forecast shimmer content -->
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/hourly_weather_shimmer_content"
+            app:layout_constraintTop_toBottomOf="@id/weather_summary_barrier"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:shimmer_duration="@integer/shimmer_effect_duration"
+            tools:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:gravity="center">
 
-                <ImageView
-                    android:layout_gravity="center"
-                    android:id="@+id/icon_weather_condition"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_margin="12dp"/>
-
-                <TextView
-                    android:id="@+id/label_temperature"
+                <HorizontalScrollView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:textAlignment="center"
-                    android:textStyle="bold"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Display3" />
+                    android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/label_temp_unit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:textStyle="bold"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="200dp"
+                        android:orientation="horizontal"
+                        android:gravity="start|center_vertical">
+
+                        <include layout="@layout/hourly_forecast_item_shimmer" />
+                        <include layout="@layout/hourly_forecast_item_shimmer" />
+                        <include layout="@layout/hourly_forecast_item_shimmer" />
+                        <include layout="@layout/hourly_forecast_item_shimmer" />
+                        <include layout="@layout/hourly_forecast_item_shimmer" />
+                        <include layout="@layout/hourly_forecast_item_shimmer" />
+                        <include layout="@layout/hourly_forecast_item_shimmer" />
+                        <include layout="@layout/hourly_forecast_item_shimmer" />
+                        <include layout="@layout/hourly_forecast_item_shimmer" />
+                    </LinearLayout>
+                </HorizontalScrollView>
+
+                <View
+                    android:layout_width="200dp"
+                    android:layout_height="36dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/shimmer_background" />
 
             </LinearLayout>
+        </com.facebook.shimmer.ShimmerFrameLayout>
 
-            <TextView
-                android:id="@+id/weather_condition"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:textAlignment="center"
-                android:layout_marginTop="4dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+        <!-- end of hourly forecast shimmer content -->
 
-            <TextView
-                android:id="@+id/other_temp"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:textAlignment="center"
-                android:layout_marginTop="4dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+        <!-- start of hourly forecast main content -->
 
-        </LinearLayout>
-
-        <!-- hourly weather forecast -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/forecast_hourly"
             android:layout_width="match_parent"
             android:layout_height="200dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/weather_summary_barrier"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:orientation="horizontal"
             tools:itemCount="24"
             tools:listitem="@layout/hourly_forecast_item"/>
 
-
-        <!-- button to navigate weather forecast screen -->
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_weather_forecast"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/forecast_hourly"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="12dp"
+            android:textSize="14sp"
             android:text="@string/text_weather_forecast" />
 
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/hourly_forecast_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:constraint_referenced_ids="forecast_hourly,btn_weather_forecast"
+            tools:visibility="visible"/>
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/hourly_forecast_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="forecast_hourly,btn_weather_forecast" />
+
+        <!-- end of hourly forecast main content -->
+
         <!-- weather details -->
-        <LinearLayout
+
+        <!-- start weather details shimmer -->
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/weather_details_shimmer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/hourly_forecast_barrier"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp">
+
+                <include layout="@layout/activity_home_weather_details_item_shimmer" />
+                <include layout="@layout/activity_home_weather_details_item_shimmer" />
+                <include layout="@layout/activity_home_weather_details_item_shimmer" />
+                <include layout="@layout/activity_home_weather_details_item_shimmer" />
+                <include layout="@layout/activity_home_weather_details_item_shimmer" />
+
+            </LinearLayout>
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <!-- end weather details shimmer -->
+
+        <!-- start weather details main content -->
+        <LinearLayout
+            android:id="@+id/weather_details_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/hourly_forecast_barrier"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:orientation="vertical"
             android:gravity="center"
-            android:padding="16dp">
+            android:layout_marginTop="16dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="24dp">
 
             <!-- uv index -->
             <GridLayout
@@ -123,7 +441,7 @@
                     android:layout_rowSpan="2"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:layout_margin="12dp"
+                    android:layout_margin="8dp"
                     app:srcCompat="@drawable/uv_index" />
 
                 <TextView
@@ -131,31 +449,37 @@
                     android:layout_column="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:text="@string/text_uv"
-                    android:textAppearance="@style/TextAppearance.WeatherApp.Title"/>
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:text="@string/label_uv_index"
+                    android:textAppearance="@style/TextAppearance.Material3.LabelMedium"/>
 
                 <TextView
+                    android:id="@+id/uv_index"
                     android:layout_row="1"
                     android:layout_column="1"
-                    android:id="@+id/uv_index"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:textAppearance="@style/TextAppearance.WeatherApp.Body"/>
+                    android:layout_marginTop="2dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    tools:text="Low"/>
 
                 <com.google.android.material.divider.MaterialDivider
                     android:layout_row="2"
                     android:layout_column="1"
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="4dp"/>
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="6dp"/>
 
             </GridLayout>
 
             <!-- precipitation -->
             <GridLayout
+                android:layout_marginTop="12dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -173,9 +497,11 @@
                     android:layout_column="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:text="@string/text_precipitation"
-                    android:textAppearance="@style/TextAppearance.WeatherApp.Title"/>
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:text="@string/label_precipitation"
+                    android:textAppearance="@style/TextAppearance.Material3.LabelMedium"/>
 
                 <TextView
                     android:layout_row="1"
@@ -183,21 +509,25 @@
                     android:id="@+id/precipitation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:textAppearance="@style/TextAppearance.WeatherApp.Body"/>
+                    android:layout_marginTop="2dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    tools:text="38 mm"/>
 
                 <com.google.android.material.divider.MaterialDivider
                     android:layout_row="2"
                     android:layout_column="1"
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="4dp"/>
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"/>
 
             </GridLayout>
 
             <!-- humidity -->
             <GridLayout
+                android:layout_marginTop="12dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -215,9 +545,11 @@
                     android:layout_column="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:text="@string/text_humidity"
-                    android:textAppearance="@style/TextAppearance.WeatherApp.Title"/>
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:text="@string/label_humidity"
+                    android:textAppearance="@style/TextAppearance.Material3.LabelMedium"/>
 
                 <TextView
                     android:layout_row="1"
@@ -225,21 +557,25 @@
                     android:id="@+id/humidity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:textAppearance="@style/TextAppearance.WeatherApp.Body"/>
+                    android:layout_marginTop="2dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    tools:text="72%"/>
 
                 <com.google.android.material.divider.MaterialDivider
                     android:layout_row="2"
                     android:layout_column="1"
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:layout_marginBottom="4dp"/>
+                    android:layout_marginStart="8dp"/>
 
             </GridLayout>
 
             <!-- sunrise -->
             <GridLayout
+                android:layout_marginTop="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -257,9 +593,11 @@
                     android:layout_column="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:text="@string/text_sunrise"
-                    android:textAppearance="@style/TextAppearance.WeatherApp.Title"/>
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:text="@string/label_sunrise"
+                    android:textAppearance="@style/TextAppearance.Material3.LabelMedium"/>
 
                 <TextView
                     android:layout_row="1"
@@ -267,21 +605,23 @@
                     android:id="@+id/sunrise"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:textAppearance="@style/TextAppearance.WeatherApp.Body"/>
+                    android:layout_marginTop="2dp"
+                    android:layout_marginStart="12dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    tools:text="05:02 AM"/>
 
                 <com.google.android.material.divider.MaterialDivider
                     android:layout_row="2"
                     android:layout_column="1"
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:layout_marginBottom="4dp"/>
-
+                    android:layout_marginStart="8dp"/>
             </GridLayout>
 
             <!-- sunset -->
             <GridLayout
+                android:layout_marginTop="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -299,9 +639,11 @@
                     android:layout_column="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:text="@string/text_sunset"
-                    android:textAppearance="@style/TextAppearance.WeatherApp.Title"/>
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:text="@string/label_sunset"
+                    android:textAppearance="@style/TextAppearance.Material3.LabelMedium"/>
 
                 <TextView
                     android:layout_row="1"
@@ -309,21 +651,23 @@
                     android:id="@+id/sunset"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:textAppearance="@style/TextAppearance.WeatherApp.Body"/>
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="12dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    tools:text="06:20 PM"/>
 
                 <com.google.android.material.divider.MaterialDivider
                     android:layout_row="2"
                     android:layout_column="1"
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:layout_marginBottom="4dp"/>
+                    android:layout_marginStart="8dp"/>
 
             </GridLayout>
 
         </LinearLayout>
+        <!-- end weather details main content -->
 
-    </LinearLayout>
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

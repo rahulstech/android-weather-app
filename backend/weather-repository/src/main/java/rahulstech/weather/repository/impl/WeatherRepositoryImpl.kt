@@ -12,9 +12,11 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.job
 import kotlinx.coroutines.withContext
 import rahulstech.weather.repository.BuildConfig
@@ -146,28 +148,21 @@ internal class WeatherRepositoryImpl(
         }
     }
 
-
-
     override suspend fun getHourlyForecast(
         cityId: Long,
         date: LocalDate
     ): Flow<Resource<List<HourWeatherModel>>> = flow {
         emit(Resource.Loading())
 
-        try {
-            var hourlyWeather = getLocalHourlyForecast(cityId, date)
-            emit(Resource.Success(hourlyWeather))
-        }
-        catch (ex: Exception) {
-            emit(Resource.Error(ex))
-        }
+        daos.getHourWeatherDao().getCityHourlyWeatherForWholeDay(cityId, date)
+            .map { result ->
+                result.toHourWeatherModelList()
+            }
+            .catch { ex ->
+                emit(Resource.Error(WeatherRepositoryException("can not load local hourly forecast", ex)))
+            }
+            .collect { emit(Resource.Success(it)) }
     }
-
-    private suspend fun getLocalHourlyForecast(cityId: Long, date: LocalDate): List<HourWeatherModel> {
-            val hourDao = daos.getHourWeatherDao()
-            val hourlyWeather = hourDao.getCityHourlyWeatherForWholeDay(cityId, date)
-            return withContext(dispatcher) { hourlyWeather.toHourWeatherModelList() }
-        }
 
     override suspend fun getForecastForDate(
         cityId: Long,
@@ -184,15 +179,23 @@ internal class WeatherRepositoryImpl(
             }
             emit(Resource.Success(dayWeather))
         }
-        catch (ex: Exception) {
+        catch (ex: WeatherRepositoryException) {
             emit(Resource.Error(ex))
+        }
+        catch (ex: Exception) {
+            emit(Resource.Error(WeatherRepositoryException("",ex)))
         }
     }
 
     private suspend fun getLocalWeatherForecastForDate(cityId: Long, date: LocalDate): DayWeatherModel? {
         val dayDao = daos.getDayWeatherDao()
-        val dayWeather = dayDao.getCityWeatherForDate(cityId, date)
-        return dayWeather?.toDayWeatherModel()
+        try {
+            val dayWeather = dayDao.getCityWeatherForDate(cityId, date)
+            return dayWeather?.toDayWeatherModel()
+        }
+        catch (ex: Exception) {
+            throw WeatherRepositoryException("unable to load local city weather for date",ex)
+        }
     }
 
     private suspend fun fetchWeatherForecastForDate(cityId: Long, date: LocalDate) {
@@ -220,8 +223,6 @@ internal class WeatherRepositoryImpl(
         }
     }
 
-
-
     override suspend fun getForecast(cityId: Long): Flow<Resource<List<DayWeatherModel>>> = flow {
         emit(Resource.Loading())
         try {
@@ -233,8 +234,11 @@ internal class WeatherRepositoryImpl(
             }
             emit(Resource.Success(weatherDays))
         }
-        catch (ex: Exception) {
+        catch (ex: WeatherRepositoryException) {
             emit(Resource.Error(ex))
+        }
+        catch (ex: Exception) {
+            emit(Resource.Error(WeatherRepositoryException("")))
         }
     }
 
@@ -255,50 +259,93 @@ internal class WeatherRepositoryImpl(
         daos.getHourWeatherDao().addMultipleHourWeather(weatherHours)
     }
 
-    private fun getCityRemoteId(cityId: Long): String {
-        val cityDao = daos.getCityDao()
-        val city = cityDao.getCityById(cityId)
-        if (null == city) {
-            throw WeatherRepositoryException("no city found for id=$cityId")
-        }
-        return city.remoteId
-    }
-
     private suspend fun getLocalWeatherForecast(cityId: Long, days: Int): List<DayWeatherModel> {
-        val startDate = LocalDate.now()
-        val endDate = startDate.plusDays(days.toLong())
-        val dayWeather = daos.getDayWeatherDao()
-        val weatherDay = dayWeather.getCityWeatherBetweenDates(cityId, startDate, endDate)
-        val models = withContext(dispatcher) { weatherDay.toDayWeatherModelList() }
-        return models
+        try {
+            val startDate = LocalDate.now()
+            val endDate = startDate.plusDays(days.toLong())
+            val weatherDay = daos.getDayWeatherDao().getCityWeatherBetweenDates(cityId, startDate, endDate)
+            val models = withContext(dispatcher) { weatherDay.toDayWeatherModelList() }
+            return models
+        }
+        catch (ex: Exception) {
+            throw WeatherRepositoryException("unable to load local weather forecast", ex)
+        }
     }
 
     private suspend fun getRemoteWeatherForecastForDays(cityId: String, days: Int): Forecast {
         val response = api.getForecast("id:$cityId", days)
         if (response.isSuccessful) {
             return response.body()?.forecast!!
-        }
-        else {
+        } else {
             val errorResponse = response.parseErrorBody()
             throw WeatherRepositoryException("unable to fetch remote weather forecast; error=$errorResponse")
         }
     }
 
+    private suspend fun getCityRemoteId(cityId: Long): String {
+        return getLocalCityById(cityId)?.remoteId ?: ""
+    }
 
     override suspend fun findCityById(cityId: Long): Flow<Resource<CityModel>> = flow {
         emit(Resource.Loading())
 
         try {
-            val city = daos.getCityDao().getCityById(cityId)
+            val city = getLocalCityById(cityId)
             if (city == null) {
                 emit(Resource.Error(WeatherRepositoryException("no city found for id=$cityId")))
             }
             else {
-                emit(Resource.Success(city.toCityModel()))
+                emit(Resource.Success(city))
             }
         }
         catch (ex: Exception) {
             emit(Resource.Error(WeatherRepositoryException("findCityById db error", ex)))
+        }
+    }
+
+    override suspend fun getAllSavedCities(): Flow<Resource<List<CityModel>>> = flow {
+        emit(Resource.Loading())
+
+        daos.getCityDao()
+            .getAllCities()
+            .catch { ex ->
+                emit(Resource.Error(WeatherRepositoryException("unable to fetch local cities", ex)))
+            }
+            .map { cities -> cities.toCityModelList() }
+            .collect { cities ->
+                emit(Resource.Success(cities))
+            }
+    }
+
+    override suspend fun removeCity(cityId: Long): Flow<Resource<CityModel>> = flow {
+        emit(Resource.Loading())
+
+        try {
+            val city = getLocalCityById(cityId);
+            if (null == city) {
+                emit(Resource.Error(WeatherRepositoryException("no city found for id $cityId")))
+            }
+            else {
+                daos.getCityDao().deleteCity(cityId)
+                emit(Resource.Success(city))
+            }
+        }
+        catch (ex: WeatherRepositoryException) {
+            emit(Resource.Error(ex))
+        }
+        catch (ex: Exception) {
+            emit(Resource.Error(WeatherRepositoryException("can not remove city locally", ex)))
+        }
+    }
+
+    private suspend fun getLocalCityById(id: Long): CityModel? {
+        val cityDao = daos.getCityDao()
+        try {
+            val city = cityDao.getCityById(id)
+            return city?.toCityModel()
+        }
+        catch (ex: Exception) {
+            throw WeatherRepositoryException("unable to get local city by id", ex)
         }
     }
 }

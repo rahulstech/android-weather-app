@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
+import android.view.View
 import androidx.annotation.StringRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.res.ResourcesCompat
@@ -137,7 +138,7 @@ enum class WeatherIcon(
     }
 }
 
-fun getWeatherConditionIcon(ctx: Context, code: Int, isDay: Boolean): String {
+fun getWeatherConditionIcon(ctx: Context, code: Int, isDay: Boolean = true): String {
     val icon = WeatherIcon.fromCode(code) ?: WeatherIcon.ICON_113
     return icon.getIcon(ctx, isDay)
 }
@@ -147,9 +148,22 @@ fun getTemperatureCelsiusText(tempC: Int): String = "$tempC $TEXT_UNIT_CELSIUS"
 fun get12HourFormattedTimeText(time: LocalTime?): CharSequence? = time?.format(FORMATTER_TIME_12HOURS)
 
 fun getUVLabel(ctx: Context, uv: Float): String = ctx.getString( when {
-        uv <= 2 -> R.string.text_uv_low
-        uv <= 5 -> R.string.text_uv_moderate
-        uv <= 7 -> R.string.text_uv_high
-        uv <= 10 -> R.string.text_uv_very_high
-        else -> R.string.text_uv_extream
+        uv <= 2 -> R.string.uv_low
+        uv <= 5 -> R.string.uv_moderate
+        uv <= 7 -> R.string.uv_high
+        uv <= 10 -> R.string.uv_very_high
+        else -> R.string.uv_extreme
     })
+
+
+internal fun View.showView() {
+    visibility = View.VISIBLE
+}
+
+internal fun View.hideView() {
+    visibility = View.GONE
+}
+
+internal fun View.invisible() {
+    visibility = View.INVISIBLE
+}
