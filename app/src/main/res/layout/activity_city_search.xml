@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
+    android:gravity="top|center_horizontal"
     tools:context=".ui.search.CitySearchActivity">
 
     <EditText
@@ -54,7 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:layout_margin="8dp"
+        android:layout_marginTop="16dp"
         android:visibility="gone"
         tools:visibility="visible"/>
 

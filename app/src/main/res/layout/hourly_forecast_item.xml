@@ -23,6 +23,7 @@
             android:textAlignment="center"
             android:layout_marginTop="4dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="?attr/colorOnSecondary"
             tools:text="12:00 AM"/>
 
         <com.github.pwittchen.weathericonview.WeatherIconView
@@ -30,7 +31,7 @@
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_marginTop="8dp"
-            app:weatherIconColor="?android:attr/textColorPrimary"
+            app:weatherIconColor="?attr/colorOnSecondary"
             app:weatherIconSize="24"/>
 
         <TextView
@@ -41,6 +42,7 @@
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textStyle="bold"
+            android:textColor="?attr/colorOnSecondary"
             tools:text="55°c"/>
 
         <TextView
@@ -50,6 +52,7 @@
             android:layout_marginTop="8dp"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="?attr/colorOnSecondary"
             android:maxLines="2"
             tools:text="Moderate snow with thunder" />
 

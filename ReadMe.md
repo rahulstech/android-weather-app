@@ -1,14 +1,17 @@
 ## Android Weather App
 
 This is a simple android weather application that fetches weather data from [WeatherApi](https://weatherapi.com). It provides current hour data, hourly weather forecast, seven days weather forecast and city search. Selected city from city search result is saved in a shared preference
-to use the location as default weather location. By default city **London, UK** is selected.
+to use the location as default weather location. ~~By default city **London, UK** is selected~~ On first use of app an alter dialog is show to choose a city.
 
 ### Features
 
 1. current weather report
 2. hourly weather forecast
 3. find and set weather location
+   1. choose from saved cities
+   2. search cities
 4. 7 days weather forecast
+5. locally cached for offline first
 
 ### Learning Outcome
 
@@ -54,8 +57,14 @@ contains the api key value. I added an Interceptor that appends `key` query para
 - **Get ViewModel:** using `ViewModelProvider.get(Class)` I can get and existing view model instance or create if not exists
 - **RecyclerView item click:** to handle recyclerview item click i have used `RecyclerView.OnItemTouchListener` and `GestureDetector`. GestureDetector requires a `OnGestureListener`. This gesture listener provides different methods to handle different
 click events like single click, long click etc. finally an instance of OnItemTouchListener to be added to RecyclerView with `addOnItemTouchListener`
+- **Working with data layer and multiple data source:** The app now use **Room** as local data source and the **WeatherApi* api as remote data source. Android data layer design guideline is follow to design difference data source and repository to
+properly perform the crud operation while maintaining data integrity.
+- **DI using koin:** **koin** di library is used to perform dependency injection
 
 ### Change Log
+- **v3.0**
+ local cache implemented via [Room](https://developer.android.com/training/data-storage/room) and made it offline first
+
 - **v2.0**
  4 features implemented
   1. city search and change current weather location

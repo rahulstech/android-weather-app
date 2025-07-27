@@ -14,7 +14,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:weatherIconSize="36"
-        app:weatherIconColor="@color/black"/>
+        app:weatherIconColor="@android:color/black"/>
 
 
     <TextView android:id="@+id/label_date"
