@@ -24,6 +24,8 @@
     <string name="text_saving_city">saving city</string>
     <string name="text_city_not_saved">city not saved</string>
     <string name="text_city_removed_successfully">%1$s removed</string>
-
+    <string name="message_no_city_selected">No city selected for weather</string>
+    <string name="text_choose_city">Choose City</string>
+    <string name="text_exit">Exit</string>
 
 </resources>

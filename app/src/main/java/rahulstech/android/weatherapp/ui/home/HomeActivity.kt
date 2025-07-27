@@ -6,6 +6,7 @@ import android.util.Log
 import android.util.Pair
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,10 +16,10 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import rahulstech.android.weatherapp.R
-import rahulstech.android.weatherapp.ui.search.CitySearchActivity
-import rahulstech.android.weatherapp.ui.forecast.WeatherForecastActivity
 import rahulstech.android.weatherapp.databinding.ActivityHomeBinding
 import rahulstech.android.weatherapp.setting.SettingsStorage
+import rahulstech.android.weatherapp.ui.forecast.WeatherForecastActivity
+import rahulstech.android.weatherapp.ui.search.CitySearchActivity
 import rahulstech.android.weatherapp.util.get12HourFormattedTimeText
 import rahulstech.android.weatherapp.util.getTemperatureCelsiusText
 import rahulstech.android.weatherapp.util.getUVLabel
@@ -87,7 +88,21 @@ class HomeActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         val cityId = setting.getWeatherLocationId()
-        viewModel.changeCurrentCity(cityId)
+        if (cityId > 0) {
+            viewModel.changeCurrentCity(cityId)
+        }
+        else {
+            showCityNotSelectedWarning()
+        }
+    }
+
+    private fun showCityNotSelectedWarning() {
+        AlertDialog.Builder(this)
+            .setMessage(R.string.message_no_city_selected)
+            .setPositiveButton(R.string.text_choose_city) { di,which -> handleSearchCity() }
+            .setNeutralButton(R.string.text_exit) { di,which -> finish() }
+            .setCancelable(false)
+            .show()
     }
 
     private fun onWeatherForecastFetched(
@@ -137,11 +152,8 @@ class HomeActivity : AppCompatActivity() {
                             }
                         }
                     }
-            else -> {
-
-            }
+            else -> {}
         }
-
     }
 
     private fun onCurrentWeatherLoaded(city: CityModel, dailyForecast: DayWeatherModel, hourlyForecast: List<HourWeatherModel>) {
@@ -202,16 +214,10 @@ class HomeActivity : AppCompatActivity() {
 
     private fun onHourlyForecastsLoaded(hourlyForecast: List<HourWeatherModel>) {
         Log.i(TAG, "hourly forecast ${hourlyForecast.size}")
-        val currentHour = LocalTime.now().hour
-        val filtered = hourlyForecast.filter { forecast ->
-            val time = forecast.datetime.toLocalTime()
-            time.hour >= currentHour
-        }
-        hourlyForecastAdapter.submitList(filtered)
+        hourlyForecastAdapter.submitList(hourlyForecast)
     }
 
     private fun onDailyForecastFetched(dailyForecastResource: Resource<DayWeatherModel>) {
-
         when(dailyForecastResource){
             is Resource.Loading -> {
                 binding.apply {

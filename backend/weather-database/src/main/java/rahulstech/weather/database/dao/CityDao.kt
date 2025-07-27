@@ -12,7 +12,7 @@ import rahulstech.weather.database.entity.City
 interface CityDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun addCity(city: City): Long
+    suspend fun addCity(city: City): Long
 
     @Query("SELECT * FROM `weather_cities`")
     fun getAllCities(): Flow<List<City>>
@@ -21,7 +21,7 @@ interface CityDao {
     suspend fun getCityById(id: Long): City?
 
     @Query("SELECT * FROM `weather_cities` WHERE `remoteId` = :remoteId")
-    fun getCityByRemoteId(remoteId: String): City?
+    suspend fun getCityByRemoteId(remoteId: String): City?
 
     @Query("DELETE FROM `weather_cities` WHERE `id` = :id")
     suspend fun deleteCity(id: Long): Int

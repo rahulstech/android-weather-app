@@ -1,17 +1,9 @@
 package rahulstech.android.weatherapp.util
 
 import android.content.Context
-import android.graphics.Color
-import android.graphics.Typeface
-import android.graphics.drawable.Drawable
 import android.view.View
 import androidx.annotation.StringRes
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.content.res.ResourcesCompat
-import com.amulyakhare.textdrawable.TextDrawable
-import com.amulyakhare.textdrawable.util.ColorGenerator
 import rahulstech.android.weatherapp.R
-import rahulstech.weather.repository.WeatherCondition
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
@@ -74,7 +66,7 @@ fun getWeatherConditionText(ctx: Context, code: Int): String {
     return ctx.getString(resId)
 }
 
-enum class WeatherIcon(
+private enum class WeatherIcon(
     @StringRes private val dayIconResource: Int,
     @StringRes private val nightIconResource: Int
 ) {

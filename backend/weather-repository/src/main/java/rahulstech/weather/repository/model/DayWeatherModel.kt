@@ -1,7 +1,6 @@
 package rahulstech.weather.repository.model
 
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.LocalTime
 
 data class DayWeatherModel(
@@ -18,5 +17,5 @@ data class DayWeatherModel(
     val snow: Float,
     val sunrise: LocalTime,
     val sunset: LocalTime,
-    val lastModified: LocalDateTime
+    val lastModified: LocalDate
 )

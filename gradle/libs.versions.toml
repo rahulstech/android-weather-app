@@ -14,7 +14,6 @@ vRoom = '2.6.0'
 vKoin = '4.0.3'
 vMockWebServer = '4.10.0'
 vWeatherIconView = '2.0.0'
-vTextDrawable = '2.0.0'
 vShimmer = '1.0.1'
 
 [libraries]
@@ -35,7 +34,6 @@ room-compiler = { group = 'androidx.room', name = 'room-compiler', version.ref =
 koin-android = { group = 'io.insert-koin', name = 'koin-android', version.ref = 'vKoin' }
 mockwebserver = { group = 'com.squareup.okhttp3', name = 'mockwebserver', version.ref = 'vMockWebServer'}
 weathericonview = { group = 'com.github.rahulstech', name = 'weathericonview', version.ref = 'vWeatherIconView' }
-textdrawable = { group = 'com.github.rahulstech', name = 'textdrawable', version.ref = 'vTextDrawable' }
 shimmer = { group = 'com.github.rahulstech', name = 'shimmer-android', version.ref = 'vShimmer' }
 
 [plugins]

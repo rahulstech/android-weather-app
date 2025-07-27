@@ -7,7 +7,6 @@ import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import rahulstech.weather.database.util.Converters
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.LocalTime
 
 @Entity(
@@ -38,5 +37,5 @@ data class DayWeather (
     @TypeConverters(Converters::class)
     val sunset: LocalTime,
     @TypeConverters(Converters::class)
-    val lastModified: LocalDateTime = LocalDateTime.now()
+    val lastModified: LocalDate = LocalDate.now()
 )

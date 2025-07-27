@@ -6,10 +6,11 @@ plugins {
 
 android {
     namespace 'rahulstech.weather.database'
-    compileSdk 34
+    compileSdk 36
 
     defaultConfig {
         minSdk 26
+        targetSdk 36
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -49,15 +50,13 @@ android {
 }
 
 dependencies {
-
     // room
     implementation libs.room.ktx
     api libs.room.runtime
+
     //noinspection KaptUsageInsteadOfKsp
     kapt libs.room.compiler
 
     implementation libs.androidx.core.ktx
     implementation libs.androidx.appcompat
-    testImplementation libs.junit
-    androidTestImplementation libs.androidx.junit
 }
